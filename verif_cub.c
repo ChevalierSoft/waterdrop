@@ -103,7 +103,7 @@ int	ft_aff_map(int **map, int mapX, int mapY, position_t *ppl)
 			else
 			{
 				if (map[j][i] == 0)
-					printf(RST "%d " RST, map[j][i++]);
+					printf(BLK "%d " RST, map[j][i++]);
 				else if (map[j][i] == 1)
 					printf(MAG "%d " RST, map[j][i++]);
 				else if (map[j][i] == 10)
