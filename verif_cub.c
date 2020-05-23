@@ -1,28 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-
-typedef struct	position_s
-{
-	int x;
-	int y;
-	int o;
-}				position_t;
-
-typedef struct	waterDrop_s
-{
-	int px;
-	int py;
-	int e;
-}				waterDrop_t;
-
-void	help()
-{
-
-	write(1, "help\n", 5);
-}
+#include "waterdrop.h"
 
 void	zero(int **map, int mx, int my)
 {
@@ -125,7 +101,16 @@ int	ft_aff_map(int **map, int mapX, int mapY, position_t *ppl)
 			if (i == ppl->x && j == ppl->y)
 				printf("%c ", ppl->o, i++);
 			else
-				printf("%d ", map[j][i++]);
+			{
+				if (map[j][i] == 0)
+					printf(BLK "%d " RST, map[j][i++]);
+				if (map[j][i] == 1)
+					printf(MAG "%d " RST, map[j][i++]);
+				else if (map[j][i] == 10)
+					printf(GRN "%d " RST, map[j][i++]);
+				else if (map[j][i] == 11)
+					printf(BLU "%d " RST, map[j][i++]);
+			}
 		}
 		printf("\n");
 		j++;
@@ -232,33 +217,26 @@ int	**ft_get_map(char *name, int mapX, int mapY)
 	return (map);
 }
 
-int propagation(int **map, int mx, int my, position_t *ppl)
+int	main(int argc, char** argv)
 {
-	int **wmap;
-	int puddle;
-	
-	wmap = dup_array(map, mx, my);
-	puddle = 0;
-
-	write(1, "yeet\n", 5);
-	del_2Darray(wmap, my);
-}
-
-int	main(void)
-{
-	char *name = "maps/map3.cub";
+	char *name;// = "maps/map1.cub";
 	int mapX;
 	int mapY;
 	int **map;
+	int err;
 	position_t ppl;
 
+	if (argc < 2)
+		name = strdup("maps/map1.cub");
+	else
+		name = argv[1];
 	ppl.x = -1;
 	ppl.y = -1;
 	if (ft_verif_map(name, &mapX, &mapY, &ppl))
 		return (0);
 	map = ft_get_map(name, mapX, mapX);
 	ft_aff_map(map, mapX, mapY, &ppl);
-	propagation(map, mapX, mapY, &ppl);
+	err = waterdrop(map, mapX, mapY, &ppl);
 	del_2Darray(map, mapY);
 	return(0);
 }
