@@ -99,17 +99,19 @@ int	ft_aff_map(int **map, int mapX, int mapY, position_t *ppl)
 		while (i < mapX)
 		{
 			if (i == ppl->x && j == ppl->y)
-				printf("%c ", ppl->o, i++);
+				printf(YEL "%c " RST, ppl->o, i++);
 			else
 			{
 				if (map[j][i] == 0)
-					printf(BLK "%d " RST, map[j][i++]);
-				if (map[j][i] == 1)
+					printf(RST "%d " RST, map[j][i++]);
+				else if (map[j][i] == 1)
 					printf(MAG "%d " RST, map[j][i++]);
 				else if (map[j][i] == 10)
 					printf(GRN "%d " RST, map[j][i++]);
 				else if (map[j][i] == 11)
 					printf(BLU "%d " RST, map[j][i++]);
+				else
+					printf(YEL "%d " RST, map[j][i++]);
 			}
 		}
 		printf("\n");
@@ -140,12 +142,17 @@ int	ft_get_mapXY(char *name, int *mapX, int *mapY, position_t *ppl)
 	unsigned char buf[1];
 	char res;
 	int vx;
+	int endl;
 
 	*mapX = 0;
 	*mapY = 1;
+	endl = 1;
 	vx = 0;
 	if ((fdv = open(name, O_RDONLY)) < 0)
+	{
+		printf("probleme d'ouverture\n");
 		return (-1);
+	}
 	while ((res = read(fdv, buf, 1)) > 0)
 	{
 		if (buf[0] == '\n')
@@ -153,14 +160,24 @@ int	ft_get_mapXY(char *name, int *mapX, int *mapY, position_t *ppl)
 			if (*mapX < vx)
 				*mapX = vx;
 			vx = 0;
-			(*mapY)++;
+			if (!endl)
+			{
+				(*mapY)++;
+				endl = 1;
+			}
 		}
 		else if (ledgit_square(*buf, ppl, vx, *mapY))
+		{
+			endl = 0;
 			vx++;
+		}
 		else if (*buf == ' ')
 			;
 		else
+		{
+			printf("caractere inaproprié\n");
 			return (-2);
+		}
 	}
 	close(fdv);
 	return (*mapY);
@@ -190,26 +207,31 @@ int	**ft_get_map(char *name, int mapX, int mapY)
 	int fdv;
 	char buf[1];
 	char res;
+	int endl;
 
 	i = 0;
 	j = 0;
+	endl = 1;
 	map = init_2Darray(mapX, mapY);
 	fdv = open(name, O_RDONLY);
-	// May use get_next_line() to gain some speed
+	// I may use get_next_line() to gain some speed
 	while ((res = read(fdv, buf, 1)) > 0)
 	{
-		if (*buf == '1' || *buf == '2' || *buf== '0')
+		if (*buf == '1' || *buf == '2' || *buf == '0')
 		{
 			map[j][i++] = c2i(*buf);
+			endl = 0;
 		}
 		else if (*buf == 'N' || *buf == 'E' || *buf == 'S' || *buf == 'W')
 		{
 			map[j][i++] = 0;
+			endl = 0;
 		}
-		if (i >= mapX)
+		if (i >= mapX || (*buf == '\n' && !endl))
 		{
 			j++;
 			i = 0;
+			endl = 1;
 		}
 	}
 	printf("\n");
@@ -219,7 +241,7 @@ int	**ft_get_map(char *name, int mapX, int mapY)
 
 int	main(int argc, char** argv)
 {
-	char *name;// = "maps/map1.cub";
+	char *name;
 	int mapX;
 	int mapY;
 	int **map;
