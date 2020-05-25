@@ -12,6 +12,7 @@ int ft_strlen(char *s)
 
 void	print(char *s)
 {
+	
 	write(1, s, ft_strlen(s));
 }
 

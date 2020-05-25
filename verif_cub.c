@@ -107,9 +107,9 @@ int	ft_aff_map(int **map, position_t mapsize, position_t *ppl)
 				else if (map[j][i] == 1)
 					printf(MAG "%d " RST, map[j][i++]);
 				else if (map[j][i] == 'x')
-					printf(GRN "%c " RST, map[j][i++]);
+					printf(CYN "%c " RST, map[j][i++]);
 				else if (map[j][i] == '+')
-					printf(BLU "%c " RST, map[j][i++]);
+					printf(GRN "%c " RST, map[j][i++]);
 				else
 					printf(YEL "%d " RST, map[j][i++]);
 			}
@@ -188,6 +188,11 @@ int	ft_verif_map(char *name, position_t *mapsize, position_t *ppl)
 	int err;
 
 	err = ft_get_mapXY(name, mapsize, ppl);
+	if (err == -1)
+	{
+		printf("error : code %d\n", err);
+		return (-1);
+	}
 	if (mapsize->x < 3 || mapsize->y < 3 || ppl->x < 1 || ppl->y < 1)
 	{
 		printf("error : code %d\n", err);
@@ -242,14 +247,12 @@ int	main(int argc, char** argv)
 {
 	char *name;
 	position_t mapsize;
-	int mapX;
-	int mapY;
 	int **map;
 	int err;
 	position_t ppl;
 
 	if (argc < 2)
-		name = strdup("maps/map1.cub");
+		name = strdup("maps/map2.cub");
 	else
 		name = argv[1];
 	ppl.x = -1;
@@ -257,8 +260,12 @@ int	main(int argc, char** argv)
 	if (ft_verif_map(name, &mapsize, &ppl))
 		return (0);
 	map = ft_get_map(name, mapsize);
-	ft_aff_map(map, mapsize, &ppl);
+	// ft_aff_map(map, mapsize, &ppl);
 	err = waterdrop(map, mapsize, &ppl);
+	if (err < 0)
+		printf(RED "water leaks in the map\n" RST);
+	else
+		printf(CYN "the map looks ledgit\n" RST);
 	del_2Darray(map, mapsize.y);
 	return(0);
 }
