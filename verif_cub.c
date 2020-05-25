@@ -106,10 +106,10 @@ int	ft_aff_map(int **map, position_t mapsize, position_t *ppl)
 					printf(BLK "%d " RST, map[j][i++]);
 				else if (map[j][i] == 1)
 					printf(MAG "%d " RST, map[j][i++]);
-				else if (map[j][i] == 10)
-					printf(GRN "%d " RST, map[j][i++]);
-				else if (map[j][i] == 11)
-					printf(BLU "%d " RST, map[j][i++]);
+				else if (map[j][i] == 'x')
+					printf(GRN "%c " RST, map[j][i++]);
+				else if (map[j][i] == '+')
+					printf(BLU "%c " RST, map[j][i++]);
 				else
 					printf(YEL "%d " RST, map[j][i++]);
 			}
@@ -258,7 +258,7 @@ int	main(int argc, char** argv)
 		return (0);
 	map = ft_get_map(name, mapsize);
 	ft_aff_map(map, mapsize, &ppl);
-	err = waterdrop(map, mapsize.x, mapsize.y, &ppl);
+	err = waterdrop(map, mapsize, &ppl);
 	del_2Darray(map, mapsize.y);
 	return(0);
 }

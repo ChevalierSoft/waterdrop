@@ -32,6 +32,6 @@
 	int 			**dup_array(int **map, int mx, int my);
 	int				ft_aff_map(int **map, position_t mapsize, position_t *ppl);
 
-	int 			waterdrop(int **map, int mx, int my, position_t *ppl);
+	int 			waterdrop(int **map, position_t mapsize, position_t *ppl);
 
 #endif
