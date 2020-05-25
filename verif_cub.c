@@ -87,16 +87,16 @@ int	ft_aff_file(char *name)
 	return (0);
 }
 
-int	ft_aff_map(int **map, int mapX, int mapY, position_t *ppl)
+int	ft_aff_map(int **map, position_t mapsize, position_t *ppl)
 {
 	int i;
 	int j;
 
 	j = 0;
-	while (j < mapY)
+	while (j < mapsize.y)
 	{
 		i = 0;
-		while (i < mapX)
+		while (i < mapsize.x)
 		{
 			if (i == ppl->x && j == ppl->y)
 				printf(YEL "%c " RST, ppl->o, i++);
@@ -136,7 +136,7 @@ int	ledgit_square(char c, position_t *ppl, int vx, int mapY)
 		return (0);
 }
 
-int	ft_get_mapXY(char *name, int *mapX, int *mapY, position_t *ppl)
+int	ft_get_mapXY(char *name, position_t *mapsize, position_t *ppl)
 {
 	int fdv;
 	unsigned char buf[1];
@@ -144,8 +144,8 @@ int	ft_get_mapXY(char *name, int *mapX, int *mapY, position_t *ppl)
 	int vx;
 	int endl;
 
-	*mapX = 0;
-	*mapY = 1;
+	mapsize->x = 0;
+	mapsize->y = 1;
 	endl = 1;
 	vx = 0;
 	if ((fdv = open(name, O_RDONLY)) < 0)
@@ -157,16 +157,16 @@ int	ft_get_mapXY(char *name, int *mapX, int *mapY, position_t *ppl)
 	{
 		if (buf[0] == '\n')
 		{
-			if (*mapX < vx)
-				*mapX = vx;
+			if (mapsize->x < vx)
+				mapsize->x = vx;
 			vx = 0;
 			if (!endl)
 			{
-				(*mapY)++;
+				(mapsize->y)++;
 				endl = 1;
 			}
 		}
-		else if (ledgit_square(*buf, ppl, vx, *mapY))
+		else if (ledgit_square(*buf, ppl, vx, mapsize->y))
 		{
 			endl = 0;
 			vx++;
@@ -180,26 +180,25 @@ int	ft_get_mapXY(char *name, int *mapX, int *mapY, position_t *ppl)
 		}
 	}
 	close(fdv);
-	return (*mapY);
+	return (mapsize->y);
 }
 
-int	ft_verif_map(char *name, int *mapX, int *mapY, position_t *ppl)
+int	ft_verif_map(char *name, position_t *mapsize, position_t *ppl)
 {
 	int err;
 
-	err = ft_get_mapXY(name, mapX, mapY, ppl);
-	if (*mapX < 3 || *mapY < 3 || ppl->x < 1 || ppl->y < 1)
+	err = ft_get_mapXY(name, mapsize, ppl);
+	if (mapsize->x < 3 || mapsize->y < 3 || ppl->x < 1 || ppl->y < 1)
 	{
 		printf("error : code %d\n", err);
 		return (1);
 	}
-	printf("mapX = %d\n", *mapX);
-	printf("mapY = %d\n", *mapY);
+	printf("mapsize : (%d, %d)\n", mapsize->x, mapsize->y);
 	printf("ppl->x = %d : ppl->y = %d : ppl->o = %c\n", ppl->x, ppl->y, ppl->o);
 	return (0);
 }
 
-int	**ft_get_map(char *name, int mapX, int mapY)
+int	**ft_get_map(char *name, position_t mapsize)
 {
 	int i;
 	int j;
@@ -212,7 +211,7 @@ int	**ft_get_map(char *name, int mapX, int mapY)
 	i = 0;
 	j = 0;
 	endl = 1;
-	map = init_2Darray(mapX, mapY);
+	map = init_2Darray(mapsize.x, mapsize.y);
 	fdv = open(name, O_RDONLY);
 	// I may use get_next_line() to gain some speed
 	while ((res = read(fdv, buf, 1)) > 0)
@@ -227,7 +226,7 @@ int	**ft_get_map(char *name, int mapX, int mapY)
 			map[j][i++] = 0;
 			endl = 0;
 		}
-		if (i >= mapX || (*buf == '\n' && !endl))
+		if (i >= mapsize.x || (*buf == '\n' && !endl))
 		{
 			j++;
 			i = 0;
@@ -242,6 +241,7 @@ int	**ft_get_map(char *name, int mapX, int mapY)
 int	main(int argc, char** argv)
 {
 	char *name;
+	position_t mapsize;
 	int mapX;
 	int mapY;
 	int **map;
@@ -254,11 +254,11 @@ int	main(int argc, char** argv)
 		name = argv[1];
 	ppl.x = -1;
 	ppl.y = -1;
-	if (ft_verif_map(name, &mapX, &mapY, &ppl))
+	if (ft_verif_map(name, &mapsize, &ppl))
 		return (0);
-	map = ft_get_map(name, mapX, mapX);
-	ft_aff_map(map, mapX, mapY, &ppl);
-	err = waterdrop(map, mapX, mapY, &ppl);
-	del_2Darray(map, mapY);
+	map = ft_get_map(name, mapsize);
+	ft_aff_map(map, mapsize, &ppl);
+	err = waterdrop(map, mapsize.x, mapsize.y, &ppl);
+	del_2Darray(map, mapsize.y);
 	return(0);
 }
