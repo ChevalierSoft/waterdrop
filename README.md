@@ -1,7 +1,7 @@
 # waterdrop
 
 ## Decription
-A tool to know if a 2D map is closed or if they are some leaks.
+waterdrop is a tool to know if a 2D map is closed or if they are some leaks.
 
 ## Requierment
 Your map should have walls (1), floor (0 or ' ') and one player start position (N, S, W or E).
@@ -10,7 +10,7 @@ See exemples in *./maps/*
 ## Usage
 `make ; ./waterdrop "location/of/your/file"`
 
-you have some maps for testing in the repertory *./maps/*
+You have some maps for testing in the repertory *./maps/*
 
 ## Examples
 
