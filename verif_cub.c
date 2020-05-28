@@ -110,6 +110,8 @@ int	ft_aff_map(int **map, position_t mapsize, position_t *ppl)
 					printf(CYN "%c " RST, map[j][i++]);
 				else if (map[j][i] == '+')
 					printf(GRN "%c " RST, map[j][i++]);
+				else if (map[j][i] == ' ')
+					printf(WHT "%c " RST, map[j][i++]);
 				else
 					printf(YEL "%d " RST, map[j][i++]);
 			}
@@ -121,7 +123,7 @@ int	ft_aff_map(int **map, position_t mapsize, position_t *ppl)
 
 int	ledgit_square(char c, position_t *ppl, int vx, int mapY)
 {
-	if (c == '0' || c == '1' || c == '2')
+	if (c == '0' || c == '1' || c == '2' || c == ' ')
 		return (1);
 	else if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
 	{
@@ -150,7 +152,7 @@ int	ft_get_mapXY(char *name, position_t *mapsize, position_t *ppl)
 	vx = 0;
 	if ((fdv = open(name, O_RDONLY)) < 0)
 	{
-		printf("probleme d'ouverture\n");
+		printf("probleme d'ouverture du fichier\n");
 		return (-1);
 	}
 	while ((res = read(fdv, buf, 1)) > 0)
@@ -171,8 +173,6 @@ int	ft_get_mapXY(char *name, position_t *mapsize, position_t *ppl)
 			endl = 0;
 			vx++;
 		}
-		else if (*buf == ' ')
-			;
 		else
 		{
 			printf("caractere inaproprié\n");
@@ -195,8 +195,8 @@ int	ft_verif_map(char *name, position_t *mapsize, position_t *ppl)
 	}
 	if (mapsize->x < 3 || mapsize->y < 3 || ppl->x < 1 || ppl->y < 1)
 	{
-		printf("error : code %d\n", err);
-		return (1);
+		printf("error : map too small\n");
+		return (-2);
 	}
 	printf("mapsize : (%d, %d)\n", mapsize->x, mapsize->y);
 	printf("ppl->x = %d : ppl->y = %d : ppl->o = %c\n", ppl->x, ppl->y, ppl->o);
@@ -224,6 +224,11 @@ int	**ft_get_map(char *name, position_t mapsize)
 		if (*buf == '1' || *buf == '2' || *buf == '0')
 		{
 			map[j][i++] = c2i(*buf);
+			endl = 0;
+		}
+		else if (*buf == ' ')
+		{
+			map[j][i++] = ' ';
 			endl = 0;
 		}
 		else if (*buf == 'N' || *buf == 'E' || *buf == 'S' || *buf == 'W')
