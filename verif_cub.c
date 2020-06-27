@@ -259,12 +259,13 @@ int	main(int argc, char** argv)
 	if (argc < 2)
 		name = strdup("maps/map2.cub");
 	else
-		name = argv[1];
+		name = strdup(argv[1]);
 	ppl.x = -1;
 	ppl.y = -1;
 	if (ft_verif_map(name, &mapsize, &ppl))
 		return (0);
 	map = ft_get_map(name, mapsize);
+	free(name);
 	// ft_aff_map(map, mapsize, &ppl);
 	err = waterdrop(map, mapsize, &ppl);
 	if (err < 0)
