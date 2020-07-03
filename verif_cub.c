@@ -1,6 +1,6 @@
 #include "waterdrop.h"
 
-void	zero(int **map, int mx, int my)
+void	zero(int **map, int mx, int my, char zero)
 {
 	int i;
 	int j;
@@ -10,7 +10,7 @@ void	zero(int **map, int mx, int my)
 	{
 		i = 0;
 		while (i < mx)
-			map[j][i++] = 0;
+			map[j][i++] = zero;
 		j++;
 	}
 }
@@ -28,7 +28,7 @@ int	**init_2Darray(int mx, int my)
 	{
 		map[j++] = malloc(sizeof(int) * mx);
 	}
-	zero(map, mx, my);
+	zero(map, mx, my, ' ');
 	return (map);
 }
 
@@ -144,11 +144,11 @@ int	ft_get_mapXY(char *name, position_t *mapsize, position_t *ppl)
 	unsigned char buf[1];
 	char res;
 	int vx;
-	int endl;
+	// int endl;
 
 	mapsize->x = 0;
 	mapsize->y = 1;
-	endl = 1;
+	// endl = 1;
 	vx = 0;
 	if ((fdv = open(name, O_RDONLY)) < 0)
 	{
@@ -162,15 +162,15 @@ int	ft_get_mapXY(char *name, position_t *mapsize, position_t *ppl)
 			if (mapsize->x < vx)
 				mapsize->x = vx;
 			vx = 0;
-			if (!endl)
-			{
+			// if (!endl)
+			// {
 				(mapsize->y)++;
-				endl = 1;
-			}
+				// endl = 1;
+			// }
 		}
 		else if (ledgit_square(*buf, ppl, vx, mapsize->y))
 		{
-			endl = 0;
+			// endl = 0;
 			vx++;
 		}
 		else
@@ -211,36 +211,37 @@ int	**ft_get_map(char *name, position_t mapsize)
 	int fdv;
 	char buf[1];
 	char res;
-	int endl;
+	// int endl;
 
 	i = 0;
 	j = 0;
-	endl = 1;
+	// endl = 1;
 	map = init_2Darray(mapsize.x, mapsize.y);
 	fdv = open(name, O_RDONLY);
 	// I may use get_next_line() to gain some speed
+
 	while ((res = read(fdv, buf, 1)) > 0)
 	{
 		if (*buf == '1' || *buf == '2' || *buf == '0')
 		{
 			map[j][i++] = c2i(*buf);
-			endl = 0;
+			// endl = 0;
 		}
 		else if (*buf == ' ')
 		{
 			map[j][i++] = ' ';
-			endl = 0;
+			// endl = 0;
 		}
 		else if (*buf == 'N' || *buf == 'E' || *buf == 'S' || *buf == 'W')
 		{
 			map[j][i++] = 0;
-			endl = 0;
+			// endl = 0;
 		}
-		if (i >= mapsize.x || (*buf == '\n' && !endl))
+		else if (i == mapsize.x || (*buf == '\n')) // && !endl
 		{
 			j++;
 			i = 0;
-			endl = 1;
+			// endl = 1;
 		}
 	}
 	printf("\n");
@@ -266,7 +267,7 @@ int	main(int argc, char** argv)
 		return (0);
 	map = ft_get_map(name, mapsize);
 	free(name);
-	// ft_aff_map(map, mapsize, &ppl);
+	ft_aff_map(map, mapsize, &ppl);
 	err = waterdrop(map, mapsize, &ppl);
 	if (err < 0)
 		printf(RED "water leaks in the map\n" RST);
