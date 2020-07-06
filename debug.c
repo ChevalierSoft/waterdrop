@@ -5,8 +5,8 @@ int ft_strlen(char *s)
 	int i;
 
 	i = 0;
-	while (s[i++])
-		;
+	while (s[i])
+		i++;
 	return (i);
 }
 
@@ -28,7 +28,7 @@ void	help(void)
 	printr("help\n");
 }
 
-char	*ft_strncpy(char *dst, const char *src, size_t len)
+char	*ft_strncpy(char *dst, char *src, size_t len)
 {
 	size_t i;
 
@@ -48,7 +48,7 @@ char	*ft_strncpy(char *dst, const char *src, size_t len)
 	return (dst);
 }
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void	*ft_memcpy(void *dst, void *src, size_t n)
 {
 	size_t i;
 
@@ -61,12 +61,12 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(char *s1)
 {
 	char	*r;
 	size_t	sz;
 
-	sz = ft_strlen((char*)s1) + 1;
+	sz = ft_strlen(s1) + 1;
 	if (!(r = malloc(sz)))
 		return (0);
 	return (ft_memcpy(r, s1, sz));
@@ -85,7 +85,7 @@ void	*ft_memset(void *b, int c, size_t len)
 	return (beg);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*s3;
 	size_t	s1len;
@@ -93,8 +93,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s1 || !s2)
 		return (0);
-	s2len = ft_strlen((char*)s2);
-	s1len = ft_strlen((char*)s1);
+	s2len = ft_strlen(s2);
+	s1len = ft_strlen(s1);
 	if (!(s3 = (malloc(sizeof(char) * (s1len + s2len + 1)))))
 		return (0);
 	ft_strncpy(s3, s1, s1len);

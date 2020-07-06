@@ -28,11 +28,11 @@
 	void			print(char *s);
 	int				ft_strlen(char *s);
 	// soon from libft
-	char			*ft_strncpy(char *dst, const char *src, size_t len);
-	void			*ft_memcpy(void *dst, const void *src, size_t n);
-	char			*ft_strdup(const char *s1);
+	char			*ft_strncpy(char *dst, char *src, size_t len);
+	void			*ft_memcpy(void *dst, void *src, size_t n);
+	char			*ft_strdup(char *s1);
 	void			*ft_memset(void *b, int c, size_t len);
-	char			*ft_strjoin(char const *s1, char const *s2);
+	char			*ft_strjoin(char *s1, char *s2);
 
 	// gnl
 	int				get_next_line(int fd, char **line);
