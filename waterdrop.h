@@ -34,6 +34,9 @@
 	void			*ft_memset(void *b, int c, size_t len);
 	char			*ft_strjoin(char const *s1, char const *s2);
 
+	// gnl
+	int				get_next_line(int fd, char **line);
+
 	// get_infos.c
 	int				get_infos(char *name);
 
@@ -41,7 +44,7 @@
 	int				**init_2Darray(int mx, int my);
 	void			del_2Darray(int **map, int my);
 	int 			**dup_array(int **map, int mx, int my);
-	int				ft_aff_map(int **map, position_t mapsize, position_t *ppl);
+	void			ft_aff_map(int **map, position_t mapsize, position_t *ppl);
 
 	// waterdrop.c
 	int 			waterdrop(int **map, position_t mapsize, position_t *ppl);

@@ -1,0 +1,17 @@
+R 1920 1080
+
+N0 pathN
+
+SO pathS
+
+WE pathW
+
+EA pathE
+
+S pathSprite
+
+F pathFloor
+
+C pathTop
+
+map...

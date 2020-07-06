@@ -87,7 +87,7 @@ int	ft_aff_file(char *name)
 	return (0);
 }
 
-int	ft_aff_map(int **map, position_t mapsize, position_t *ppl)
+void		ft_aff_map(int **map, position_t mapsize, position_t *ppl)
 {
 	int i;
 	int j;
@@ -99,7 +99,10 @@ int	ft_aff_map(int **map, position_t mapsize, position_t *ppl)
 		while (i < mapsize.x)
 		{
 			if (i == ppl->x && j == ppl->y)
-				printf(YEL "%c " RST, ppl->o, i++);
+			{
+				printf(YEL "%c " RST, ppl->o);
+				i++;
+			}
 			else
 			{
 				if (map[j][i] == 0)
@@ -257,7 +260,7 @@ int	main(int argc, char** argv)
 	int err;
 	position_t ppl;
 
-	get_infos("maps/map2.cub");
+	get_infos("./info.cub");
 /*
 	if (argc < 2)
 		name = strdup("maps/map2.cub");

@@ -1,5 +1,5 @@
 #include "waterdrop.h"
-#include <windows.h>
+//#include <windows.h>
 
 int	set_new_puddle(int **nmap, int px, int py, position_t mapsize, int *puddles)
 {
