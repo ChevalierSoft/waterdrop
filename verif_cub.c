@@ -257,6 +257,8 @@ int	main(int argc, char** argv)
 	int err;
 	position_t ppl;
 
+	get_infos("maps/map2.cub");
+/*
 	if (argc < 2)
 		name = strdup("maps/map2.cub");
 	else
@@ -274,5 +276,6 @@ int	main(int argc, char** argv)
 	else
 		printf(CYN "the map looks ledgit\n" RST);
 	del_2Darray(map, mapsize.y);
+*/
 	return(0);
 }

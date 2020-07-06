@@ -4,7 +4,9 @@ GRN     = \033[32;01m
 RST     = \033[0m
 SRCS	= ./waterdrop.c \
 ./verif_cub.c \
-./debug.c
+./debug.c \
+get_next_line.c \
+get_infos.c
 
 all: $(NAME)
 
