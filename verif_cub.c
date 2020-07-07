@@ -252,6 +252,23 @@ int	**ft_get_map(char *name, position_t mapsize)
 	return (map);
 }
 
+int	meta_init(meta_t *meta)
+{
+	meta_t *meta;
+
+	meta = malloc(sizeof(meta_t));
+	meta->WW = 0;
+ 	meta->WH = 0;
+	meta->strR = NULL;
+	meta->pathN = NULL;
+	meta->pathS = NULL;
+	meta->pathE = NULL;
+	meta->pathW = NULL;
+	meta->pathSP = NULL;
+	meta->pathF = NULL;
+	meta->pathR = NULL;
+}
+
 int	main(int argc, char** argv)
 {
 	char *name;
@@ -260,7 +277,9 @@ int	main(int argc, char** argv)
 	int err;
 	position_t ppl;
 
-	get_infos("./info.cub");
+	meta_t *meta;
+
+	get_infos(meta, "./info.cub");
 /*
 	if (argc < 2)
 		name = strdup("maps/map2.cub");

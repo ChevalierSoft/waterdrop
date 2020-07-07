@@ -22,6 +22,20 @@
 		int e;
 	}				waterDrop_t;
 
+	typedef struct	meta_s
+	{
+		int		WW;
+		int		WH;
+		char	*strR;
+		char	*pathN;
+		char	*pathS;
+		char	*pathE;
+		char	*pathW;
+		char	*pathSP;
+		char	*pathF;
+		char	*pathR;
+	}				meta_t;
+
 	// debug.c
 	void			help();
 	void			printr(char *s);
@@ -33,12 +47,13 @@
 	char			*ft_strdup(char *s1);
 	void			*ft_memset(void *b, int c, size_t len);
 	char			*ft_strjoin(char *s1, char *s2);
+	int				ft_strncmp(char const *s1, char const *s2, size_t n);
 
 	// gnl
 	int				get_next_line(int fd, char **line);
 
 	// get_infos.c
-	int				get_infos(char *name);
+	int				get_infos(meta_t *meta, char *name);
 
 	// verif_cub.c
 	int				**init_2Darray(int mx, int my);

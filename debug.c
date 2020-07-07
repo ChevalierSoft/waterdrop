@@ -102,3 +102,18 @@ char	*ft_strjoin(char *s1, char *s2)
 	s3[s1len + s2len] = '\0';
 	return (s3);
 }
+
+int	ft_strncmp(char const *s1, char const *s2, size_t n)
+{
+	int res;
+
+	if (!n)
+		return (0);
+	while ((*s1) && (*s2) && (*s1 == *s2) && --n)
+	{
+		s1++;
+		s2++;
+	}
+	res = (unsigned char)*s1 - (unsigned char)*s2;
+	return (res);
+}
