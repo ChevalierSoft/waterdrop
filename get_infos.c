@@ -2,7 +2,8 @@
 
 void	aff_meta(meta_t *meta)
 {
-	printf("R  : %s\n", meta->strR);
+	printf("sR : %s\n", meta->strR);
+	printf("R  : ww : %d : wh  : %d\n", meta->WW, meta->WH);
 	printf("NO : %s\n", meta->pathN);
 	printf("SO : %s\n", meta->pathS);
 	printf("EA : %s\n", meta->pathE);
@@ -12,18 +13,31 @@ void	aff_meta(meta_t *meta)
 	printf("C  : %s\n", meta->pathR);
 }
 
-int	set_R(meta_t *meta, char *l)
+int	set_R(meta_t *meta)
 {
+	int i;
+
+	i = 0;
+	meta->WW = atoi(meta->strR);
+	while (meta->strR[i] != ' ')
+		i++;
+	i++;
+	meta->WH = atoi(meta->strR + i);
+
 	return (0);
 }
 
 int	readit(meta_t *meta, char *l)
 {
-	//if (!l[0])
-	//	return (0);
-	if (!ft_strncmp(l, "R ", 2))
-		//set_line(meta->strR, l + 2);
+	if (!l || !meta)
+		return (-2);
+	else if (!l[0])	// ligne vide
+		return (0);
+	else if (!ft_strncmp(l, "R ", 2))
+	{
 		meta->strR = ft_strdup(l + 2);
+		set_R(meta);
+	}
 
 	else if (!ft_strncmp(l, "NO ", 3))
 		meta->pathN = ft_strdup(l + 3);
@@ -36,13 +50,19 @@ int	readit(meta_t *meta, char *l)
 		meta->pathW = ft_strdup(l + 3);
 
 	else if (!ft_strncmp(l, "S ", 2))
+	{
+		printf("SPRITE\n");
 		meta->pathSP = ft_strdup(l + 2);
+	}
 	else if (!ft_strncmp(l, "F ", 2))
 		meta->pathF = ft_strdup(l + 2);
 	else if (!ft_strncmp(l, "C ", 2))
 		meta->pathR = ft_strdup(l + 2);
-	//else
-	//	return (-1);
+	// else
+	// {
+	// 	printf("Error\nWrong line in .cub file\n");
+	// 	return (-1);
+	// }
 	return (0);
 }
 
@@ -51,6 +71,7 @@ int get_infos(meta_t *meta, char *name)
 	int fd;
 	char *l = NULL;
 	int err;
+	int gnl;
 
 	if ((fd = open(name, O_RDONLY)) < 0)
 	{
@@ -58,14 +79,16 @@ int get_infos(meta_t *meta, char *name)
 		return (-1);
 	}
 	err = 0;
-	while (err >= 0 && get_next_line(fd, &l))
+	while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
 	{
 		err = readit(meta, l);
 		printf(">%s<\n", l);
-		//free(l);
+		free(l);
 	}
 	printf(">%s<\n", l);
 	free(l);
-	aff_meta(meta);
+	// printf("gnl : %d\n", gnl);
+	// aff_meta(meta);
+	
 	return (0);
 }

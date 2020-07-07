@@ -16,7 +16,7 @@ $(NAME): $(OBJS)
 	@gcc -O3 -o $(NAME) $(OBJS) $(FLAGS)
 
 %.o: %.c
-	@gcc -O3 ${FLAGS} -c -o $@ $< -I ./waterdrop.h
+	@gcc -O3 ${FLAGS} -c -o $@ $<
 
 clean:
 	rm $(OBJS)

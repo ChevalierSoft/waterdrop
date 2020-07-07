@@ -87,7 +87,7 @@ int		get_next_line(int fd, char **line)
 			return (bosg(&(a[fd]), buff[fd], (line), res[fd]));
 		else if ((is_ok = bosg(&(a[fd]), buff[fd], line, BUFFER_SIZE) != RAS))
 			return (is_ok);
-		ft_memset(buff, 0, BUFFER_SIZE);
+		// ft_memset(buff, 0, BUFFER_SIZE);
 	}
 	return (0);
 }
