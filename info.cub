@@ -1,17 +1,18 @@
 R 1920 1080
 
-NO path to N
 
+S pathSprite
 SO pathS
 
 WE pathW
 
 EA pathE
 
-S pathSprite
 
 F pathFloor
 
+
+NO path to N
 C pathTop
 
 map...

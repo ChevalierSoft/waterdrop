@@ -16,10 +16,14 @@ $(NAME) : $(OBJS)
 	@gcc ${FLAGS} -c -o $@ $< get_next_line.h
 
 clean:
-	rm $(OBJS)
+	@echo "Deleting gnl object files\c"
+	@/bin/rm -f $(OBJS)
+	@echo "\t$(GRN)[OK]$(RST)"
 
 fclean: clean
-	rm $(NAME)
+	@echo "Deleting $(NAME)\c"
+	@/bin/rm -f $(NAME)
+	@echo "\t$(GRN)[OK]$(RST)"
 
 re: fclean all
 
