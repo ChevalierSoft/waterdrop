@@ -271,6 +271,19 @@ meta_t	*meta_init()
 	return (meta);
 }
 
+void	remove_meta(meta_t **m)
+{
+	free((*m)->strR);
+	free((*m)->pathN);
+	free((*m)->pathS);
+	free((*m)->pathE);
+	free((*m)->pathW);
+	free((*m)->pathSP);
+	free((*m)->pathF);
+	free((*m)->pathR);
+	free(*m);
+}
+
 int	main(int argc, char** argv)
 {
 	char *name;
@@ -282,8 +295,9 @@ int	main(int argc, char** argv)
 	meta_t *meta;
 
 	meta = meta_init();
-	//get_infos(meta, "info.cub");
-	get_infos(meta, "get_infos.c");
+	if (get_infos(meta, "info.cub"))
+		return (-2);
+
 /*
 	if (argc < 2)
 		name = strdup("maps/map2.cub");
@@ -303,5 +317,7 @@ int	main(int argc, char** argv)
 		printf(CYN "the map looks ledgit\n" RST);
 	del_2Darray(map, mapsize.y);
 */
+	
+	remove_meta(&meta);
 	return(0);
 }

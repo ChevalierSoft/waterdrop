@@ -13,7 +13,7 @@ void	aff_meta(meta_t *meta)
 	printf("C  : %s\n", meta->pathR);
 }
 
-int	set_R(meta_t *meta)
+static int	set_R(meta_t *meta)
 {
 	int i;
 
@@ -27,7 +27,7 @@ int	set_R(meta_t *meta)
 	return (0);
 }
 
-int	readit(meta_t *meta, char *l)
+static int	readit(meta_t *meta, char *l)
 {
 	if (!l || !meta)
 		return (-2);
@@ -58,11 +58,11 @@ int	readit(meta_t *meta, char *l)
 		meta->pathF = ft_strdup(l + 2);
 	else if (!ft_strncmp(l, "C ", 2))
 		meta->pathR = ft_strdup(l + 2);
-	// else
-	// {
-	// 	printf("Error\nWrong line in .cub file\n");
-	// 	return (-1);
-	// }
+	else
+	{
+		printf("Error\nWrong line in .cub file\n");
+		return (-1);
+	}
 	return (0);
 }
 
@@ -85,10 +85,13 @@ int get_infos(meta_t *meta, char *name)
 		printf(">%s<\n", l);
 		free(l);
 	}
-	printf(">%s<\n", l);
-	free(l);
-	// printf("gnl : %d\n", gnl);
-	// aff_meta(meta);
+	if (!err)
+	{
+		printf(">%s<\n", l);
+		free(l);
+	}
+	printf("gnl : %d\n", gnl);
+	aff_meta(meta);
 	
 	return (0);
 }
