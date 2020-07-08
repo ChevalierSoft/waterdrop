@@ -56,10 +56,17 @@
 	// get_infos.c
 	int				get_infos(meta_t *meta, char *name);
 
-	// verif_cub.c
+	// array_tools.c
 	int				**init_2Darray(int mx, int my);
 	void			del_2Darray(int **map, int my);
 	int 			**dup_array(int **map, int mx, int my);
+
+	//meta.c
+	void			aff_meta(meta_t *meta);
+	meta_t			*meta_init(void);
+	void			remove_meta(meta_t **m);
+
+	// verif_cub.c
 	void			ft_aff_map(int **map, position_t mapsize, position_t *ppl);
 
 	// waterdrop.c

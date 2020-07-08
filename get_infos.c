@@ -1,24 +1,15 @@
 #include "waterdrop.h"
 
-void	aff_meta(meta_t *meta)
-{
-	printf("sR : %s\n", meta->strR);
-	printf("R  : ww : %d : wh  : %d\n", meta->WW, meta->WH);
-	printf("NO : %s\n", meta->pathN);
-	printf("SO : %s\n", meta->pathS);
-	printf("EA : %s\n", meta->pathE);
-	printf("WE : %s\n", meta->pathW);
-	printf("SP : %s\n", meta->pathSP);
-	printf("F  : %s\n", meta->pathF);
-	printf("C  : %s\n", meta->pathR);
-}
-
 static int	set_R(meta_t *meta)
 {
 	int i;
 
 	i = 0;
-	meta->WW = atoi(meta->strR);
+	if ((meta->WW = atoi(meta->strR)) <= 0)
+	{
+		printf("Error\nWrong resolution in .cub file");
+		return (-1);
+	}
 	while (meta->strR[i] != ' ')
 		i++;
 	i++;
@@ -27,43 +18,56 @@ static int	set_R(meta_t *meta)
 	return (0);
 }
 
-static int	readit(meta_t *meta, char *l)
+static int	dup4meta(char **d, char *l)
 {
+	if (!(*d = ft_strdup(l)))
+	{
+		printf("Error\nNot enough RAM for meta_t strings\n");
+		return (-1);
+	}
+
+	return (0);
+}
+
+static int	readit(meta_t *meta, char *l, int line)
+{
+	int err;
+
+	err = 0;
 	if (!l || !meta)
 		return (-2);
 	else if (!l[0])	// ligne vide
 		return (0);
 	else if (!ft_strncmp(l, "R ", 2))
 	{
-		meta->strR = ft_strdup(l + 2);
-		set_R(meta);
+		err = dup4meta(&meta->strR, l + 2);
+		if ((err = set_R(meta)) < 0)
+			return (err);
 	}
-
 	else if (!ft_strncmp(l, "NO ", 3))
-		meta->pathN = ft_strdup(l + 3);
+		err = dup4meta(&meta->pathN, l + 3);
 	else if (!ft_strncmp(l, "SO ", 3))
-		meta->pathS = ft_strdup(l + 3);
-
+		err = dup4meta(&meta->pathS, l + 3);
 	else if (!ft_strncmp(l, "EA ", 3))
-		meta->pathE = ft_strdup(l + 3);
+		err = dup4meta(&meta->pathE, l + 3);
 	else if (!ft_strncmp(l, "WE ", 3))
-		meta->pathW = ft_strdup(l + 3);
-
+		err = dup4meta(&meta->pathW, l + 3);
 	else if (!ft_strncmp(l, "S ", 2))
-	{
-		printf("SPRITE\n");
-		meta->pathSP = ft_strdup(l + 2);
-	}
+		err = dup4meta(&meta->pathSP, l + 2);
 	else if (!ft_strncmp(l, "F ", 2))
-		meta->pathF = ft_strdup(l + 2);
+		err = dup4meta(&meta->pathF, l + 2);
 	else if (!ft_strncmp(l, "C ", 2))
-		meta->pathR = ft_strdup(l + 2);
+		err = dup4meta(&meta->pathR, l + 2);
+	else if (ft_memchr(" 012NSEW", *l, 8))
+	{
+		printf("c'est la map : %s\n", l);
+	}
 	else
 	{
 		printf("Error\nWrong line in .cub file\n");
-		return (-1);
+		return (-3);
 	}
-	return (0);
+	return (err);
 }
 
 int get_infos(meta_t *meta, char *name)
@@ -72,7 +76,9 @@ int get_infos(meta_t *meta, char *name)
 	char *l = NULL;
 	int err;
 	int gnl;
+	int line;
 
+	line = 0;
 	if ((fd = open(name, O_RDONLY)) < 0)
 	{
 		print("wrong .cub file path\n");
@@ -81,13 +87,15 @@ int get_infos(meta_t *meta, char *name)
 	err = 0;
 	while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
 	{
-		err = readit(meta, l);
-		printf(">%s<\n", l);
+		err = readit(meta, l, line);
+		//printf(">%s<\n", l);
 		free(l);
+		line ++;
 	}
 	if (!err)
 	{
-		printf(">%s<\n", l);
+		//printf(">%s<\n", l);
+		err = readit(meta, l, line);
 		free(l);
 	}
 	printf("gnl : %d\n", gnl);

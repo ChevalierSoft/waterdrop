@@ -6,6 +6,8 @@ LIBS	= get_next_line.a libft.a
 OBJS	= ${SRCS:.c=.o}
 SRCS	= ./waterdrop.c \
 ./verif_cub.c \
+./array_tools.c \
+./meta.c \
 ./debug.c \
 ./get_infos.c
 
