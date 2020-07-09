@@ -192,18 +192,30 @@ int	main(int argc, char** argv)
 {
 	printf(CYN ". o O 🌊 WATERDROP 🌊 O o .\n" RST);
 
+	int fd;
 	char *name;
 	position_t mapsize;
 	int **map;
 	int err;
 	position_t ppl;
+	int line;
 
+	line = 0;
 	meta_t *meta;
+
+
+	if ((fd = open("info.cub", O_RDONLY)) < 0)
+	{
+		print("wrong .cub file path\n");
+		return (-1);
+	}
 
 	if (!(meta = meta_init()))
 		return (-1);
-	if (get_infos(meta, "info.cub"))
+
+	if (get_infos(meta, fd, &line))
 		return (-2);
+	close(fd);
 
 	/*
 	if (argc < 2)

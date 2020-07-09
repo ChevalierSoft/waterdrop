@@ -1,5 +1,7 @@
 #include "waterdrop.h"
 
+#define MAP_FOUND 89
+
 static int	set_R(meta_t *meta)
 {
 	int i;
@@ -61,43 +63,47 @@ static int	readit(meta_t *meta, char *l, int line)
 	else if (ft_memchr(" 012NSEW", *l, 8))
 	{
 		printf("c'est la map : %s\n", l);
+		if (!(meta->pathN && meta->pathS && meta->pathE && meta->pathW
+			&& meta->pathSP && meta->pathF && meta->pathR))
+		{
+			printf("Error\nlake of intel before the map in .cub file\n");
+			return (-4);
+		}
+		return(MAP_FOUND);
 	}
 	else
 	{
-		printf("Error\nWrong line in .cub file\n");
+		printf("Error\nWrong line in .cub file\nline %d", line);
 		return (-3);
 	}
 	return (err);
 }
 
-int get_infos(meta_t *meta, char *name)
+int get_infos(meta_t *meta, int fd, int *line)
 {
-	int fd;
 	char *l = NULL;
 	int err;
 	int gnl;
-	int line;
 
-	line = 0;
-	if ((fd = open(name, O_RDONLY)) < 0)
-	{
-		print("wrong .cub file path\n");
-		return (-1);
-	}
+	map_t map;
+
 	err = 0;
 	while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
 	{
-		err = readit(meta, l, line);
+		err = readit(meta, l, *line);
 		//printf(">%s<\n", l);
 		free(l);
-		line ++;
+		(*line)++;
 	}
-	if (!err)
-	{
-		//printf(">%s<\n", l);
-		err = readit(meta, l, line);
-		free(l);
-	}
+	
+	// if (!err)
+	// {
+	// 	// printf(">%s<\n", l);
+	// 	printf("reached the end ++\n");
+	// 	err = readit(meta, l, *line);
+	// 	free(l);
+	// }
+
 	printf("gnl : %d\n", gnl);
 	aff_meta(meta);
 	

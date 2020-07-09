@@ -23,6 +23,13 @@
 		int e;
 	}				waterDrop_t;
 
+	typedef struct	map_s
+	{
+		int sx;
+		int sy;
+		int **data;
+	}				map_t;
+
 	typedef struct	meta_s
 	{
 		int		WW;
@@ -54,7 +61,7 @@
 	int				get_next_line(int fd, char **line);
 
 	// get_infos.c
-	int				get_infos(meta_t *meta, char *name);
+	int				get_infos(meta_t *meta, int fd, int *line);
 
 	// array_tools.c
 	int				**init_2Darray(int mx, int my);
