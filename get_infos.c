@@ -38,8 +38,6 @@ static int	dup4meta(char **s, char *l, int *straff, int d)
 		printf("Error\nNot enough RAM for meta_t strings\n");
 		return (-1);
 	}
-	// (*straff) += ft_strlen(l);
-
 	return (0);
 }
 
@@ -119,7 +117,6 @@ int		ft_get_mapXY(char *l, position_t *mapsize, position_t *ppl)
 	vx = 0;
 	while (*l)
 	{
-		// printf("%c", *l);
 		if (ledgit_square(*l, ppl, vx, mapsize->y) > 0)
 			vx++;
 		else
@@ -132,7 +129,6 @@ int		ft_get_mapXY(char *l, position_t *mapsize, position_t *ppl)
 	if (mapsize->x < vx)
 		mapsize->x = vx;
 	mapsize->y++;
-	// printf("\n");
 	return (0);
 }
 
@@ -146,7 +142,6 @@ int 	get_infos(meta_t *meta, int fd, int *straff, position_t *ms, position_t *pp
 	err = 0;
 	while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
 	{
-
 		if ((err = readit(meta, l, straff)) == MAP_FOUND)
 		{
 			break ;
@@ -162,30 +157,12 @@ int 	get_infos(meta_t *meta, int fd, int *straff, position_t *ms, position_t *pp
 		while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
 		{
 			err = ft_get_mapXY(l, ms, ppl);
-			// inc_straff(l, straff);
-			// if ((err = (*f)(meta, l, straff)) == MAP_FOUND)
-			// {
-				
-			// 	break ;
-			// }
-			//printf(">%s<\n", l);
 			free(l);
 		}
 	 	printf("mapsize : (%d, %d)\n", ms->x, ms->y);
 	 	printf("ppl->x = %d : ppl->y = %d : ppl->o = %c\n", ppl->x, ppl->y, ppl->o);
-
 	}
-
-	// if (!err)
-	// {
-	// 	// printf(">%s<\n", l);
-	// 	printf("reached the end ++\n");
-	// 	err = readit(meta, l, *line);
-	// 	free(l);
-	// }
-
-	printf("gnl : %d\n", gnl);
-	aff_meta(meta);
-	
+	// printf("		 : %d\n", gnl);
+	aff_meta(meta);	
 	return (err);
 }
