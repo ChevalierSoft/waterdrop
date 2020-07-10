@@ -121,51 +121,42 @@ void		ft_aff_map(int **map, position_t mapsize, position_t *ppl)
 // 	return (mapsize->y);
 // }
 
-// int	**ft_get_map(char *name, position_t mapsize)
-// {
-// 	int i;
-// 	int j;
-// 	int **map;
-// 	int fdv;
-// 	char buf[1];
-// 	char res;
-// 	// int endl;
+int		**ft_get_map(int fd, position_t mapsize)
+{
+	int i;
+	int j;
+	int **map;
+	char buf[1];
+	char res;
 
-// 	i = 0;
-// 	j = 0;
-// 	// endl = 1;
-// 	map = init_2Darray(mapsize.x, mapsize.y);
-// 	fdv = open(name, O_RDONLY);
-// 	// I may use get_next_line() to gain some speed
+	i = 0;
+	j = 0;
+	map = init_2Darray(mapsize.x, mapsize.y);
 
-// 	while ((res = read(fdv, buf, 1)) > 0)
-// 	{
-// 		if (*buf == '1' || *buf == '2' || *buf == '0')
-// 		{
-// 			map[j][i++] = c2i(*buf);
-// 			// endl = 0;
-// 		}
-// 		else if (*buf == ' ')
-// 		{
-// 			map[j][i++] = ' ';
-// 			// endl = 0;
-// 		}
-// 		else if (*buf == 'N' || *buf == 'E' || *buf == 'S' || *buf == 'W')
-// 		{
-// 			map[j][i++] = 0;
-// 			// endl = 0;
-// 		}
-// 		else if (i == mapsize.x || (*buf == '\n')) // && !endl
-// 		{
-// 			j++;
-// 			i = 0;
-// 			// endl = 1;
-// 		}
-// 	}
-// 	printf("\n");
-// 	close(fdv);
-// 	return (map);
-// }
+	while ((res = read(fd, buf, 1)) > 0)
+	{
+		if (*buf == '1' || *buf == '2' || *buf == '0')
+		{
+			map[j][i++] = c2i(*buf);
+		}
+		else if (*buf == ' ')
+		{
+			map[j][i++] = ' ';
+		}
+		else if (*buf == 'N' || *buf == 'E' || *buf == 'S' || *buf == 'W')
+		{
+			map[j][i++] = 0;
+		}
+		else if (i == mapsize.x || (*buf == '\n')) // && !endl
+		{
+			j++;
+			i = 0;
+		}
+	}
+	printf("\n");
+	close(fd);
+	return (map);
+}
 
 // int	ft_verif_map(char *name, position_t *mapsize, position_t *ppl)
 // {
@@ -187,22 +178,31 @@ void		ft_aff_map(int **map, position_t mapsize, position_t *ppl)
 // 	return (0);
 // }
 
-
-int	main(int argc, char** argv)
+void	ft_init_pos(position_t *p, int _x, int _y, char _o)
 {
-	printf(CYN ". o O 🌊 WATERDROP 🌊 O o .\n" RST);
+	p->x = _x;
+	p->y = _y;
+	p->o = _o;
+}
+
+
+int		main(int argc, char** argv)
+{
+	printf(CYN "\n. o O 🌊 WATERDROP 🌊 O o .\n\n" RST);
 
 	int fd;
 	char *name;
-	position_t mapsize;
 	int **map;
 	int err;
+	position_t mapsize;
 	position_t ppl;
-	int line;
+	int straff;
 
-	line = 0;
 	meta_t *meta;
+	straff = 0;
 
+	ft_init_pos(&mapsize, 0, 0, 'x');
+	ft_init_pos(&ppl, -1, -1, 'p');
 
 	if ((fd = open("info.cub", O_RDONLY)) < 0)
 	{
@@ -211,11 +211,26 @@ int	main(int argc, char** argv)
 	}
 
 	if (!(meta = meta_init()))
-		return (-1);
-
-	if (get_infos(meta, fd, &line))
 		return (-2);
+
+	if (get_infos(meta, fd, &straff, &mapsize, &ppl))
+	{
+		return (-3);
+	}
 	close(fd);
+
+	// maintenant on a l'intel
+
+	if ((fd = open("info.cub", O_RDONLY)) < 0)
+	{
+		print("wrong .cub file path\n");
+		return (-4);
+	}
+
+	printf("HHHEEEEELLLLLPPPPP\n");
+
+	char pute[straff];
+	read(fd, pute, straff);
 
 	/*
 	if (argc < 2)
@@ -226,8 +241,10 @@ int	main(int argc, char** argv)
 	ppl.y = -1;
 	if (ft_verif_map(name, &mapsize, &ppl))
 		return (0);
-	map = ft_get_map(name, mapsize);
-	free(name);
+	*/
+
+	map = ft_get_map(fd, mapsize);
+	// free(name);
 	ft_aff_map(map, mapsize, &ppl);
 	err = waterdrop(map, mapsize, &ppl);
 	if (err < 0)
@@ -235,7 +252,6 @@ int	main(int argc, char** argv)
 	else
 		printf(CYN "the map looks ledgit\n" RST);
 	del_2Darray(map, mapsize.y);
-	*/
 	
 	remove_meta(&meta);
 	return(0);

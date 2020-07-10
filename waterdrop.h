@@ -61,7 +61,8 @@
 	int				get_next_line(int fd, char **line);
 
 	// get_infos.c
-	int				get_infos(meta_t *meta, int fd, int *line);
+	int 			get_infos(meta_t *meta, int fd, int *straff, position_t *ms, position_t *ppl);
+
 
 	// array_tools.c
 	int				**init_2Darray(int mx, int my);
