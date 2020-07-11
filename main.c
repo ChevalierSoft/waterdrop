@@ -1,39 +1,31 @@
 #include "waterdrop.h"
 
-void	ft_init_pos(position_t *p, int _x, int _y, char _o)
+void	ft_init_pos(t_pos *p, int nx, int ny, char no)
 {
-	p->x = _x;
-	p->y = _y;
-	p->o = _o;
+	p->x = nx;
+	p->y = ny;
+	p->o = no;
 }
 
-int		**ft_get_map(int fd, position_t mapsize)
+int		**ft_get_map(int fd, t_pos mapsize)
 {
-	int i;
-	int j;
-	int **map;
-	char buf[1];
-	char res;
+	int		i;
+	int		j;
+	int		**map;
+	char	buf[1];
 
 	i = 0;
 	j = 0;
-	map = init_2Darray(mapsize.x, mapsize.y);
-
-	while ((res = read(fd, buf, 1)) > 0)
+	map = init_2d_array(mapsize.x, mapsize.y);
+	while (read(fd, buf, 1) > 0)
 	{
 		if (*buf == '1' || *buf == '2' || *buf == '0')
-		{
 			map[j][i++] = c2i(*buf);
-		}
 		else if (*buf == ' ')
-		{
 			map[j][i++] = ' ';
-		}
 		else if (*buf == 'N' || *buf == 'E' || *buf == 'S' || *buf == 'W')
-		{
 			map[j][i++] = 0;
-		}
-		else if (i == mapsize.x || (*buf == '\n')) // && !endl
+		else if (i == mapsize.x || (*buf == '\n'))
 		{
 			j++;
 			i = 0;
@@ -52,11 +44,10 @@ int		main(int argc, char** argv)
 	char *name;
 	int **map;
 	int err;
-	position_t mapsize;
-	position_t ppl;
-	int straff;
-	meta_t *meta;
-
+	t_pos mapsize;
+	t_pos ppl;
+	int map_offset;
+	t_meta *meta;
 	
 	if (argc < 2)
 		name = strdup("maps/info.cub");
@@ -76,8 +67,8 @@ int		main(int argc, char** argv)
 	if (!(meta = meta_init()))
 		return (-2);
 
-	straff = 0;
-	if (get_infos(meta, fd, &straff, &mapsize, &ppl))
+	map_offset = 0;
+	if (get_infos(meta, fd, &map_offset, &mapsize, &ppl))
 	{
 		remove_meta(&meta);
 		print("wrong .cub file path\n");
@@ -98,8 +89,8 @@ int		main(int argc, char** argv)
 	}
 	free(name);
 
-	char pute[straff];
-	read(fd, pute, straff);
+	char pute[map_offset];
+	read(fd, pute, map_offset);
 
 	map = ft_get_map(fd, mapsize);
 	ft_aff_map(map, mapsize, &ppl);
@@ -108,8 +99,7 @@ int		main(int argc, char** argv)
 		printf(RED "water leaks in the map\n" RST);
 	else
 		printf(CYN "the map looks ledgit\n" RST);
-	del_2Darray(map, mapsize.y);
-	
+	remove_2d_array(map, mapsize.y);
 	remove_meta(&meta);
-	return(0);
+	return (0);
 }

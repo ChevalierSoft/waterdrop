@@ -4,44 +4,44 @@
 #define ERROR_INFO -4
 #define DOUBLE_SPAWN -22
 
-static int	set_R(meta_t *meta)
+static int	set_r(t_meta *meta)
 {
 	int i;
 
 	i = 0;
-	if ((meta->WW = atoi(meta->strR)) <= 0)
+	if ((meta->ww = atoi(meta->str_r)) <= 0)
 	{
-		printf("Error\nWrong resolution in .cub file");
+		write(1, "Error\nWrong resolution in .cub file\n", 36);
 		return (-1);
 	}
-	while (meta->strR[i] != ' ')
+	while (meta->str_r[i] != ' ')
 		i++;
 	i++;
-	meta->WH = atoi(meta->strR + i);
+	meta->wh = atoi(meta->str_r + i);
 
 	return (0);
 }
 
-static void	inc_straff(char *l, int *straff, int d)
+static void	inc_map_offset(char *l, int *map_offset, int d)
 {
 	int len;
 
 	len = ft_strlen(l);
-	(*straff) += len + d + 1; // endl = 1
+	(*map_offset) += len + d + 1; // endl = 1
 }
 
-static int	dup4meta(char **s, char *l, int *straff, int d)
+static int	dup4meta(char **s, char *l, int *map_offset, int d)
 {
-	inc_straff(l, straff, d);
+	inc_map_offset(l, map_offset, d);
 	if (!(*s = ft_strdup(l)))
 	{
-		printf("Error\nNot enough RAM for meta_t strings\n");
+		write(1, "Error\nNot enough RAM for t_meta strings\n", 40);
 		return (-1);
 	}
 	return (0);
 }
 
-static int	readit(meta_t *meta, char *l, int *straff)
+static int	readit(t_meta *meta, char *l, int *map_offset)
 {
 	int err;
 
@@ -50,49 +50,49 @@ static int	readit(meta_t *meta, char *l, int *straff)
 		return (-2);
 	else if (!l[0])	// ligne vide
 	{
-		(*straff)++;
+		(*map_offset)++;
 		return (0);
 	}
 	else if (!ft_strncmp(l, "R ", 2))
 	{
-		err = dup4meta(&meta->strR, l + 2, straff, 2);
-		if ((err = set_R(meta)) < 0)
+		err = dup4meta(&meta->str_r, l + 2, map_offset, 2);
+		if ((err = set_r(meta)) < 0)
 			return (err);
 	}
 	else if (!ft_strncmp(l, "NO ", 3))
-		err = dup4meta(&meta->pathN, l + 3, straff, 3);
+		err = dup4meta(&meta->path_n, l + 3, map_offset, 3);
 	else if (!ft_strncmp(l, "SO ", 3))
-		err = dup4meta(&meta->pathS, l + 3, straff, 3);
+		err = dup4meta(&meta->path_s, l + 3, map_offset, 3);
 	else if (!ft_strncmp(l, "EA ", 3))
-		err = dup4meta(&meta->pathE, l + 3, straff, 3);
+		err = dup4meta(&meta->path_e, l + 3, map_offset, 3);
 	else if (!ft_strncmp(l, "WE ", 3))
-		err = dup4meta(&meta->pathW, l + 3, straff, 3);
+		err = dup4meta(&meta->path_w, l + 3, map_offset, 3);
 	else if (!ft_strncmp(l, "S ", 2))
-		err = dup4meta(&meta->pathSP, l + 2, straff, 2);
+		err = dup4meta(&meta->path_sp, l + 2, map_offset, 2);
 	else if (!ft_strncmp(l, "F ", 2))
-		err = dup4meta(&meta->pathF, l + 2, straff, 2);
+		err = dup4meta(&meta->path_f, l + 2, map_offset, 2);
 	else if (!ft_strncmp(l, "C ", 2))
-		err = dup4meta(&meta->pathR, l + 2, straff, 2);
+		err = dup4meta(&meta->path_c, l + 2, map_offset, 2);
 	else if (ft_memchr(" 012NSEW", *l, 8))
 	{
-		printf("c'est la map : %s\n", l);
-		if (!(meta->pathN && meta->pathS && meta->pathE && meta->pathW
-			&& meta->pathSP && meta->pathF && meta->pathR))
+		// printf("c'est la map : %s\n", l);
+		if (!(meta->path_n && meta->path_s && meta->path_e && meta->path_w
+			&& meta->path_sp && meta->path_f && meta->path_c))
 		{
-			printf("Error\nlake of intel before the map in .cub file\n");
+			write(1, "Error\nlake of intel before the map in .cub file\n", 48);
 			return (ERROR_INFO);
 		}
 		return(MAP_FOUND);
 	}
 	else
 	{
-		printf("Error\nWrong line in .cub file\nstraff : %d", *straff);
+		write(1, "Error\nWrong line in .cub file\n", 30);
 		return (-3);
 	}
 	return (err);
 }
 
-int	ledgit_square(char c, position_t *ppl, int vx, int mapY)
+int	ledgit_square(char c, t_pos *ppl, int vx, int mapY)
 {
 	if (c == '0' || c == '1' || c == '2' || c == ' ')
 		return (1);
@@ -109,10 +109,10 @@ int	ledgit_square(char c, position_t *ppl, int vx, int mapY)
 		return (-1);
 }
 
-int		ft_get_mapXY(char *l, position_t *mapsize, position_t *ppl)
+int		ft_get_mapXY(char *l, t_pos *mapsize, t_pos *ppl)
 {
-	char res;
-	int vx;
+	char	res;
+	int		vx;
 
 	vx = 0;
 	while (*l)
@@ -121,7 +121,8 @@ int		ft_get_mapXY(char *l, position_t *mapsize, position_t *ppl)
 			vx++;
 		else
 		{
-			printf("Error\ncaractere inaproprié : %c\n", *l);
+			write(1, "Error\nwrong character for the map in .cub file\n", 47);
+			// write(1, "Error\ncaractere inaproprié : %c\n", *l);
 			return (-2);
 		}
 		l++;
@@ -132,24 +133,21 @@ int		ft_get_mapXY(char *l, position_t *mapsize, position_t *ppl)
 	return (0);
 }
 
-int 	get_infos(meta_t *meta, int fd, int *straff, position_t *ms, position_t *ppl)
+int 	get_infos(t_meta *meta, int fd, int *map_offset, t_pos *ms, t_pos *ppl)
 {
 	char *l = NULL;
 	int err;
 	int gnl;
-	map_t map;
+	t_meta map;
 
 	err = 0;
 	while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
 	{
-		if ((err = readit(meta, l, straff)) == MAP_FOUND)
-		{
+		if ((err = readit(meta, l, map_offset)) == MAP_FOUND)
 			break ;
-		}
-		//printf(">%s<\n", l);
 		free(l);
 	}
-	printf("straff : %d\n", *straff);
+	printf("map_offset : %d\n", *map_offset);
 	if (err == MAP_FOUND)
 	{
 		ms->y++;
@@ -162,7 +160,6 @@ int 	get_infos(meta_t *meta, int fd, int *straff, position_t *ms, position_t *pp
 	 	printf("mapsize : (%d, %d)\n", ms->x, ms->y);
 	 	printf("ppl->x = %d : ppl->y = %d : ppl->o = %c\n", ppl->x, ppl->y, ppl->o);
 	}
-	// printf("		 : %d\n", gnl);
 	aff_meta(meta);	
 	return (err);
 }

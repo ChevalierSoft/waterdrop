@@ -1,7 +1,7 @@
 #include "waterdrop.h"
 //#include <windows.h>
 
-void		ft_aff_map(int **map, position_t mapsize, position_t *ppl)
+void		ft_aff_map(int **map, t_pos mapsize, t_pos *ppl)
 {
 	int i;
 	int j;
@@ -38,7 +38,7 @@ void		ft_aff_map(int **map, position_t mapsize, position_t *ppl)
 	}
 }
 
-int	set_new_puddle(int **nmap, int px, int py, position_t mapsize, int *puddles)
+int	set_new_puddle(int **nmap, int px, int py, t_pos mapsize, int *puddles)
 {
 	// if there is a hole in the inside
 	if (nmap[py][px] == ' ')
@@ -52,7 +52,7 @@ int	set_new_puddle(int **nmap, int px, int py, position_t mapsize, int *puddles)
 	return (0);
 }
 
-int	water_puddle(int **nmap, position_t mapsize, position_t pudpos)
+int	water_puddle(int **nmap, t_pos mapsize, t_pos pudpos)
 {
 	int puddles;
 
@@ -73,12 +73,12 @@ int	water_puddle(int **nmap, position_t mapsize, position_t pudpos)
 	return (puddles);
 }
 
-int waterdrop(int **map, position_t mapsize, position_t *ppl)
+int waterdrop(int **map, t_pos mapsize, t_pos *ppl)
 {
 	int **cmap;
 	int **nmap;
 	int puddles;
-	position_t pudpos;
+	t_pos pudpos;
 	int wx;
 	int wy;
 	int err;
@@ -113,11 +113,11 @@ int waterdrop(int **map, position_t mapsize, position_t *ppl)
 			}
 			pudpos.y++;
 		}
-		del_2Darray(cmap, mapsize.y);
+		remove_2d_array(cmap, mapsize.y);
 		cmap = dup_array(nmap, mapsize.x, mapsize.y);
 		ft_aff_map(nmap, mapsize, ppl);
 	}
-	del_2Darray(cmap, mapsize.y);
-	del_2Darray(nmap, mapsize.y);
+	remove_2d_array(cmap, mapsize.y);
+	remove_2d_array(nmap, mapsize.y);
 	return (puddles);
 }

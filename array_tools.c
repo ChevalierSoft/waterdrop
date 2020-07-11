@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   array_tools.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dait-atm <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/11 07:18:57 by dait-atm          #+#    #+#             */
+/*   Updated: 2020/07/11 07:19:05 by dait-atm         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "waterdrop.h"
 
 void	zero(int **map, int mx, int my, char zero)
@@ -15,7 +27,7 @@ void	zero(int **map, int mx, int my, char zero)
 	}
 }
 
-int	**init_2Darray(int mx, int my)
+int		**init_2d_array(int mx, int my)
 {
 	int i;
 	int j;
@@ -32,7 +44,7 @@ int	**init_2Darray(int mx, int my)
 	return (map);
 }
 
-void	del_2Darray(int **map, int my)
+void	remove_2d_array(int **map, int my)
 {
 	int j;
 
@@ -44,13 +56,13 @@ void	del_2Darray(int **map, int my)
 	free(map);
 }
 
-int **dup_array(int **map, int mx, int my)
+int		**dup_array(int **map, int mx, int my)
 {
 	int i;
 	int j;
 	int **w;
 
-	w = init_2Darray(mx, my);
+	w = init_2d_array(mx, my);
 	j = 0;
 	while (j < my)
 	{
