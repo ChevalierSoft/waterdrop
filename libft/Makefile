@@ -6,7 +6,7 @@
 #    By: dait-atm <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 13:27:46 by dait-atm          #+#    #+#              #
-#    Updated: 2019/11/20 00:04:58 by dait-atm         ###   ########.fr        #
+#    Updated: 2020/07/11 05:55:53 by dait-atm         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,10 @@ ft_strmapi.c \
 ft_putendl_fd.c \
 ft_putnbr_fd.c \
 ft_abs.c \
-ft_isneg.c
+ft_isneg.c \
+c2i.c \
+i2c.c \
+ft_nb_digit.c
 
 BONUS = ft_lstadd_back_bonus.c \
 ft_lstadd_front_bonus.c \
