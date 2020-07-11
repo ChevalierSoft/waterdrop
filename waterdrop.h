@@ -7,7 +7,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include "color.h"
-# include "libft.h"
+# include "libft/libft.h"
 
 	typedef struct	position_s
 	{

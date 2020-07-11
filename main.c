@@ -1,11 +1,5 @@
 #include "waterdrop.h"
 
-int	c2i(char c)
-{
-
-	return (c - '0');
-}
-
 void	ft_init_pos(position_t *p, int _x, int _y, char _o)
 {
 	p->x = _x;
