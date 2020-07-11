@@ -1,5 +1,13 @@
 #include "waterdrop.h"
 
+void	flush_quit(char *msg, char *name, int code)
+{
+	print(msg);
+	if (name)
+		free(name);
+	exit(code);
+}
+
 void	ft_init_pos(t_pos *p, int nx, int ny, char no)
 {
 	p->x = nx;
@@ -43,7 +51,6 @@ int		main(int argc, char** argv)
 	int fd;
 	char *name;
 	int **map;
-	int err;
 	t_pos mapsize;
 	t_pos ppl;
 	int map_offset;
@@ -59,22 +66,19 @@ int		main(int argc, char** argv)
 
 	if ((fd = open(name, O_RDONLY)) < 0)
 	{
-		print("wrong .cub file path\n");
-		print("wrong .cub file path\n");
-		return (-1);
+		flush_quit("Error\nWrong .cub file path\n", name, -1);
 	}
 
 	if (!(meta = meta_init()))
-		return (-2);
+	{
+		flush_quit("", name, -2);
+	}
 
 	map_offset = 0;
-	if (get_infos(meta, fd, &map_offset, &mapsize, &ppl))
+	if (get_infos(meta, fd, &map_offset, &mapsize, &ppl) < 0)
 	{
-		remove_meta(&meta);
-		print("wrong .cub file path\n");
 		close(fd);
-		free(name);
-		return (-3);
+		flush_quit("", name, -3);
 	}
 	close(fd);
 
@@ -82,20 +86,20 @@ int		main(int argc, char** argv)
 
 	if ((fd = open(name, O_RDONLY)) < 0)
 	{
-		print("wrong .cub file path\n");
+		write(1, "Error\nWrong .cub file path\n", 27);
 		remove_meta(&meta);
 		free(name);
 		return (-4);
 	}
 	free(name);
+	name = NULL;
 
 	char pute[map_offset];
 	read(fd, pute, map_offset);
 
 	map = ft_get_map(fd, mapsize);
 	ft_aff_map(map, mapsize, &ppl);
-	err = waterdrop(map, mapsize, &ppl);
-	if (err < 0)
+	if (waterdrop(map, mapsize, &ppl) < 0)
 		printf(RED "water leaks in the map\n" RST);
 	else
 		printf(CYN "the map looks ledgit\n" RST);

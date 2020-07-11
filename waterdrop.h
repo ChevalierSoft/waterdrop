@@ -49,6 +49,17 @@ typedef struct	s_meta
 	char	*path_c;
 }				t_meta;
 
+typedef struct	s_intel
+{
+	char	*filename;	// rm
+	t_meta	meta;		//	--> g->textures
+	t_pos	ppl;		//	--> g->player->px/py
+	t_pos	maps_size;	//	--> g->map->sx/sy
+	int		map_offset;	// rm
+	int		fd;			// rm
+
+}				t_intel;
+
 // debug.c
 void			help();
 void			printr(char *s);
