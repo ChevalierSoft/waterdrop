@@ -5,7 +5,7 @@ RST     = \033[0m
 LIBS	= get_next_line.a libft.a
 OBJS	= ${SRCS:.c=.o}
 SRCS	= ./waterdrop.c \
-./verif_cub.c \
+./main.c \
 ./array_tools.c \
 ./meta.c \
 ./debug.c \
