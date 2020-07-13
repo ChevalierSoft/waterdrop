@@ -1,3 +1,13 @@
+R 480 680
+
+NO path to N
+S pathSprite
+EA pathE
+WE pathW
+SO pathS
+F pathFloor
+C pathTop
+
   1        1
  1111   11111111
 100001 100010001
