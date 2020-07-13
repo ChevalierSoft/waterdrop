@@ -6,6 +6,7 @@
 #define ERROR_DOUBLE_SPAWN -22
 #define ERROR_RESOLUTION -480
 #define ERROR_WRONG_CHAR -44
+#define GNL_EOF 0
 
 static int	set_r(t_meta *meta)
 {
@@ -81,8 +82,8 @@ static int	reddit(t_meta *meta, char *l, int *map_offset)
 		err = dup4meta(&meta->path_c, l + 2, map_offset, 2);
 	else if (ft_memchr(" 012NSEW", *l, 8))
 	{
-		if (!(meta->path_n && meta->path_s && meta->path_e && meta->path_w
-			&& meta->path_sp && meta->path_f && meta->path_c))
+		if (!(meta->str_r && meta->path_n && meta->path_s && meta->path_e
+			&& meta->path_w && meta->path_sp && meta->path_f && meta->path_c))
 		{
 			print("Error\nLake of intel before the map in .cub file\n");
 			return (ERROR_INFO);
@@ -162,7 +163,8 @@ int 	get_infos(t_meta *meta, int fd, int *map_offset, t_pos *ms, t_pos *ppl)
 			err = ft_get_mapXY(l, ms, ppl);
 			free(l);
 		}
-		free(l);
+		if (gnl == GNL_EOF)
+			free(l);
 		if (ppl->x == -1)
 		{
 			err = ERROR_NO_SPAWN;
