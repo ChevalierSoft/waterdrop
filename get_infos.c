@@ -2,6 +2,7 @@
 
 #define MAP_FOUND 89
 #define ERROR_INFO -4
+#define ERROR_NO_SPAWN -11
 #define ERROR_DOUBLE_SPAWN -22
 #define ERROR_RESOLUTION -480
 #define ERROR_WRONG_CHAR -44
@@ -80,11 +81,10 @@ static int	reddit(t_meta *meta, char *l, int *map_offset)
 		err = dup4meta(&meta->path_c, l + 2, map_offset, 2);
 	else if (ft_memchr(" 012NSEW", *l, 8))
 	{
-		// printf("c'est la map : %s\n", l);
 		if (!(meta->path_n && meta->path_s && meta->path_e && meta->path_w
 			&& meta->path_sp && meta->path_f && meta->path_c))
 		{
-			print("Error\nlake of intel before the map in .cub file\n");
+			print("Error\nLake of intel before the map in .cub file\n");
 			return (ERROR_INFO);
 		}
 		return(MAP_FOUND);
@@ -126,10 +126,7 @@ int		ft_get_mapXY(char *l, t_pos *mapsize, t_pos *ppl)
 			vx++;
 		else
 		{
-			free(l);
-			l = NULL;
-			print("Error\nwrong character for the map in .cub file\n");
-			// write(1, "Error\ncaractere inaproprié : %c\n", *l);
+			print("Error\nWrong character for the map in .cub file\n");
 			return (ERROR_WRONG_CHAR);
 		}
 		l++;
@@ -154,21 +151,25 @@ int 	get_infos(t_meta *meta, int fd, int *map_offset, t_pos *ms, t_pos *ppl)
 			break ;
 		free(l);
 	}
-	// printf("map_offset : %d\n", *map_offset);
 	if (err == MAP_FOUND)
 	{
 		ms->y++;
-		if ((err = ft_get_mapXY(l, ms, ppl)) >= 0)
-			free(l);
+		err = ft_get_mapXY(l, ms, ppl);
+		free(l);
+		l = NULL;
 		while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
 		{
 			err = ft_get_mapXY(l, ms, ppl);
 			free(l);
 		}
 		free(l);
+		if (ppl->x == -1)
+		{
+			err = ERROR_NO_SPAWN;
+			print("Error\nNo spawn in .cub file\n");
+		}
 	 	printf("mapsize : (%d, %d)\n", ms->x, ms->y);
 	 	printf("ppl->x = %d : ppl->y = %d : ppl->o = %c\n", ppl->x, ppl->y, ppl->o);
 	}
-	// aff_meta(meta);
 	return (err);
 }

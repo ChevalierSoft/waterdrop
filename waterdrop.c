@@ -106,7 +106,11 @@ int waterdrop(int **map, t_pos mapsize, t_pos *ppl)
 				{
 					err = water_puddle(nmap, mapsize, pudpos);
 					if (err < 0)
+					{
+						remove_2d_array(cmap, mapsize.y);
+						remove_2d_array(nmap, mapsize.y);
 						return (err);
+					}
 					puddles += err;
 				}
 				pudpos.x++;
