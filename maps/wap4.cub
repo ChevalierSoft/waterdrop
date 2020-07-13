@@ -1,18 +1,13 @@
 R 680 480
 
 
+NO path to N
 S pathSprite
-SO pathS
-
+EA pathE
 WE pathW
 
-EA pathE
-
-
+SO pathS
 F pathFloor
-
-
-NO path to N
 C pathTop
 
  1111111111
@@ -21,7 +16,10 @@ C pathTop
 100000000000001
  100000E000000011
 10001000000000001
+
 1000010000000001
  100001000000111
 1000000000001
+
+
 1111111111111

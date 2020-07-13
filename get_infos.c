@@ -158,13 +158,14 @@ int 	get_infos(t_meta *meta, int fd, int *map_offset, t_pos *ms, t_pos *ppl)
 	if (err == MAP_FOUND)
 	{
 		ms->y++;
-		if ((err = ft_get_mapXY(l, ms, ppl)) < 0)
+		if ((err = ft_get_mapXY(l, ms, ppl)) >= 0)
 			free(l);
 		while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
 		{
 			err = ft_get_mapXY(l, ms, ppl);
 			free(l);
 		}
+		free(l);
 	 	printf("mapsize : (%d, %d)\n", ms->x, ms->y);
 	 	printf("ppl->x = %d : ppl->y = %d : ppl->o = %c\n", ppl->x, ppl->y, ppl->o);
 	}
