@@ -157,7 +157,6 @@ int 	get_infos(t_meta *meta, int fd, int *map_offset, t_pos *ms, t_pos *ppl)
 		ms->y++;
 		err = ft_get_mapXY(l, ms, ppl);
 		free(l);
-		l = NULL;
 		while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
 		{
 			err = ft_get_mapXY(l, ms, ppl);
