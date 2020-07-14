@@ -68,6 +68,8 @@ int				c2i(char c);
 char			i2c(int i);
 int				ft_nb_digit(int n);
 
+int				get_next_line(int fd, char **line);
+
 t_list			*ft_lstnew(void *content);
 void			ft_lstadd_front(t_list **alst, t_list *new);
 int				ft_lstsize(t_list *lst);

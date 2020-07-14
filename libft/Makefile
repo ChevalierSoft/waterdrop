@@ -56,7 +56,8 @@ ft_abs.c \
 ft_isneg.c \
 c2i.c \
 i2c.c \
-ft_nb_digit.c
+ft_nb_digit.c \
+get_next_line.c
 
 BONUS = ft_lstadd_back_bonus.c \
 ft_lstadd_front_bonus.c \
@@ -76,19 +77,20 @@ FLAGS = -Wall -Wextra -Werror
 HDR  = includes
 
 $(NAME): ${OBJS}
-	@echo "Creating $(NAME)\c"
+	@echo "\rCreating $(NAME)\c"
 	@ar -rcs ${NAME} ${OBJS}
 	@echo "\t\t$(GRN_COLOR)[OK]$(RST_COLOR)"
 
 %.o: %.c
-	@echo "Creating object files\c"
+	@echo "\r$@\c"
 	@gcc ${FLAGS} -c -o $@ $< -I ${HDR}
-	@echo "\t\t$(GRN_COLOR)[OK]$(RST_COLOR)"
+	@echo "\t\t$(GRN_COLOR)[OK]$(RST_COLOR)\c"
+	@echo "\r                                        \c"
 
-all: bonus
+all: $(NAME)
 
 bonus: $(OBJS) $(BBJS)
-	@echo "Creating $(NAME) with bonus\c"
+	@echo "\nCreating $(NAME) with bonus\c"
 	@ar -rcs $(NAME) $(OBJS) $(BBJS)
 	@echo "\t$(GRN_COLOR)[OK]$(RST_COLOR)"
 

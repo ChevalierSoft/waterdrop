@@ -10,42 +10,41 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-#include <limits.h>
+#include "libft.h"
+#include "limits.h"
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 64
+# define BUFFER_SIZE 32
 #endif
 
-#define FD_MAX 75000
+#ifdef __unix__
+# define FD_MAX OPEN_MAX
+#endif
+
+#ifdef OS_Windows
+# define FD_MAX FOPEN_MAX
+#endif
+
+#ifndef FD_MAX
+# define FD_MAX 20
+#endif
+
 #define ALERTE -1
+#define RAS 619
 
-inline void		*ft_memset(void *b, int c, size_t len)
-{
-	void *beg;
-
-	beg = b;
-	while (len--)
-	{
-		*((char *)b) = (unsigned char)c;
-		b++;
-	}
-	return (beg);
-}
-
-static int		ret_a_plus(int *a, int r)
+static inline int		ret_a_plus(int *a, int r)
 {
 	(*a)++;
 	return (r);
 }
 
-static int		ret_a_zero(int *a, int r)
+static inline int		ret_a_zero(int *a, int r)
 {
 	(*a) = 0;
 	return (r);
 }
 
-static int		bosg(int *a, char *buff, char **line, int res)
+static int				bosg(int *a, char *buff, char **line, int res)
 {
 	char mas[2];
 	char *tmp;
@@ -72,11 +71,11 @@ static int		bosg(int *a, char *buff, char **line, int res)
 	return (RAS);
 }
 
-extern int		get_next_line(int fd, char **line)
+int						get_next_line(int fd, char **line)
 {
-	static long	res[OPEN_MAX];
-	static char	buff[OPEN_MAX][BUFFER_SIZE];
-	static int	a[OPEN_MAX];
+	static long	res[FD_MAX];
+	static char	buff[FD_MAX][BUFFER_SIZE];
+	static int	a[FD_MAX];
 	int			is_ok;
 
 	if (fd < 0 || line == NULL || BUFFER_SIZE < 1 || read(fd, buff[fd], 0) < 0)

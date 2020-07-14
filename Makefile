@@ -1,8 +1,9 @@
 NAME	= waterdrop #🌊
 FLAGS	= #-Wall -Wextra -Werror
 GRN     = \033[32;01m
+CYN		= \x1B[36;01m
 RST     = \033[0m
-LIBS	= get_next_line.a libft.a
+LIBS	= libft.a
 OBJS	= ${SRCS:.c=.o}
 SRCS	= ./waterdrop.c \
 ./main.c \
@@ -13,30 +14,33 @@ SRCS	= ./waterdrop.c \
 
 all: $(NAME)
 
-$(NAME): gnl lft $(OBJS)
-	@echo "Compiling waterdrop \c"
+$(NAME): lft $(OBJS)
+	@echo "\rCompiling waterdrop 🌊 \c"
 	@gcc -O3 -o $(NAME) $(OBJS) $(FLAGS) $(LIBS)
-	@echo "\t\t$(GRN)[OK]$(RST)"
-
-gnl:
-	make -C ./get_next_line/
-	cp ./get_next_line/get_next_line.a .
+	@echo "\t\t$(CYN)[OK]$(RST)"
 
 lft:
-	make -C ./libft/
-	cp ./libft/libft.a .
+	@echo "Making and moving libft"
+	@make -C ./libft/
+	@cp ./libft/libft.a .
 
 %.o: %.c
+	@echo "\rmaking $@\c"
 	@gcc -O3 ${FLAGS} -c -o $@ $<
+	@echo " $(CYN)[OK]$(RST)\c"
+	@echo "\r                                  \c"
 
 clean:
-	rm $(OBJS)
+	@echo "removing objects \c"
+	@rm $(OBJS)
+	@echo "\t\t$(GRN)[OK]$(RST)"
 
 fclean: clean
-	rm -f $(NAME)
-	rm -f $(LIBS)
-	make fclean -C ./libft
-	make fclean -C ./get_next_line
+	@echo "removing $(NAME) \c"
+	@rm -f $(NAME)
+	@echo "\t\t$(CYN)[OK]$(RST)"
+	@rm -f $(LIBS)
+	@make fclean -C ./libft
 
 re: fclean all
 
