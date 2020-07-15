@@ -21,6 +21,15 @@
 # include "color.h"
 # include "libft/libft.h"
 
+#define MAP_FOUND 89
+#define ERROR_INFO -4
+#define ERROR_NO_SPAWN -11
+#define ERROR_DOUBLE_SPAWN -22
+#define ERROR_RESOLUTION -480
+#define ERROR_WRONG_CHAR -44
+#define ERROR_DAMAGED_MEMORY -404
+#define GNL_EOF 0
+
 typedef struct	s_pos
 {
 	int x;
@@ -71,7 +80,11 @@ void			aff_meta(t_meta *meta);
 // quit.c
 void			flush_quit(char *msg, t_intel **it, int code);
 
+// reddit.c
+int				reddit(t_intel *it, char *l);
+
 // get_infos.c
+int				set_r(t_meta *meta);
 int				get_infos(t_intel *it);
 
 // array_tools.c

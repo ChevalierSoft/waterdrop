@@ -10,6 +10,7 @@ SRCS	= ./waterdrop.c \
 ./array_tools.c \
 ./meta.c \
 ./debug.c \
+./reddit.c \
 ./get_infos.c \
 ./intel.c \
 ./quit.c
