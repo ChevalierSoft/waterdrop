@@ -6,7 +6,13 @@
 #define ERROR_DOUBLE_SPAWN -22
 #define ERROR_RESOLUTION -480
 #define ERROR_WRONG_CHAR -44
+#define ERROR_DAMAGED_MEMORY -404
 #define GNL_EOF 0
+
+/*
+** in set_r()
+** need to test meta->ww and meta->wh < mlx_get_screen_size
+*/
 
 static int	set_r(t_meta *meta)
 {
@@ -23,23 +29,15 @@ static int	set_r(t_meta *meta)
 	i++;
 	if ((meta->wh = atoi(meta->str_r + i)) <= 3)
 	{
-		print("Error\nWrong high resolution in .cub file\n");
+		print("Error\nWrong height resolution in .cub file\n");
 		return (-2);
 	}
 	return (0);
 }
 
-static void	inc_map_offset(char *l, int *map_offset, int d)
-{
-	// int len;
-
-	// len = ft_strlen(l);
-	(*map_offset) += ft_strlen(l) + d + 1; // endl = 1
-}
-
 static int	dup4meta(char **s, char *l, int *map_offset, int d)
 {
-	inc_map_offset(l, map_offset, d);
+	(*map_offset) += ft_strlen(l) + d + 1;
 	if (!((*s) = ft_strdup(l)))
 	{
 		print("Error\nNot enough RAM for t_meta strings\n");
@@ -48,42 +46,42 @@ static int	dup4meta(char **s, char *l, int *map_offset, int d)
 	return (0);
 }
 
-static int	reddit(t_meta *meta, char *l, int *map_offset)
+static int	reddit(t_intel *it, char *l)
 {
 	int err;
 
 	err = 0;
-	if (!l || !meta)
+	if (!l || !it->meta)
 	{
 		print("Error\nDamaged memory\n");
-		return (-2);
+		return (ERROR_DAMAGED_MEMORY);
 	}
 	else if (!l[0])	// ligne vide
-		(*map_offset)++;	// return (0);
+		it->map_offset++;	// return (0);
 	else if (!ft_strncmp(l, "R ", 2))
 	{
-		err = dup4meta(&meta->str_r, l + 2, map_offset, 2);
-		if ((err = set_r(meta)) < 0)
+		err = dup4meta(&it->meta->str_r, l + 2, &it->map_offset, 2);
+		if ((err = set_r(it->meta)) < 0)
 			return (err);
 	}
 	else if (!ft_strncmp(l, "NO ", 3))
-		err = dup4meta(&meta->path_n, l + 3, map_offset, 3);
+		err = dup4meta(&it->meta->path_n, l + 3, &it->map_offset, 3);
 	else if (!ft_strncmp(l, "SO ", 3))
-		err = dup4meta(&meta->path_s, l + 3, map_offset, 3);
+		err = dup4meta(&it->meta->path_s, l + 3, &it->map_offset, 3);
 	else if (!ft_strncmp(l, "EA ", 3))
-		err = dup4meta(&meta->path_e, l + 3, map_offset, 3);
+		err = dup4meta(&it->meta->path_e, l + 3, &it->map_offset, 3);
 	else if (!ft_strncmp(l, "WE ", 3))
-		err = dup4meta(&meta->path_w, l + 3, map_offset, 3);
+		err = dup4meta(&it->meta->path_w, l + 3, &it->map_offset, 3);
 	else if (!ft_strncmp(l, "S ", 2))
-		err = dup4meta(&meta->path_sp, l + 2, map_offset, 2);
+		err = dup4meta(&it->meta->path_sp, l + 2, &it->map_offset, 2);
 	else if (!ft_strncmp(l, "F ", 2))
-		err = dup4meta(&meta->path_f, l + 2, map_offset, 2);
+		err = dup4meta(&it->meta->path_f, l + 2, &it->map_offset, 2);
 	else if (!ft_strncmp(l, "C ", 2))
-		err = dup4meta(&meta->path_c, l + 2, map_offset, 2);
+		err = dup4meta(&it->meta->path_c, l + 2, &it->map_offset, 2);
 	else if (ft_memchr(" 012NSEW", *l, 8))
 	{
-		if (!(meta->str_r && meta->path_n && meta->path_s && meta->path_e
-			&& meta->path_w && meta->path_sp && meta->path_f && meta->path_c))
+		if (!(it->meta->str_r && it->meta->path_n && it->meta->path_s && it->meta->path_e
+			&& it->meta->path_w && it->meta->path_sp && it->meta->path_f && it->meta->path_c))
 		{
 			print("Error\nLake of intel before the map in .cub file\n");
 			return (ERROR_INFO);
@@ -98,7 +96,7 @@ static int	reddit(t_meta *meta, char *l, int *map_offset)
 	return (err);
 }
 
-int		ledgit_square(char c, t_pos *ppl, int vx, int mapY)
+static int	ledgit_square(char c, t_pos *ppl, int vx, int mapY)
 {
 	if (c == '0' || c == '1' || c == '2' || c == ' ')
 		return (1);
@@ -115,9 +113,8 @@ int		ledgit_square(char c, t_pos *ppl, int vx, int mapY)
 		return (-1);
 }
 
-int		ft_get_mapXY(char *l, t_pos *mapsize, t_pos *ppl)
+static int	ft_get_mapXY(char *l, t_pos *mapsize, t_pos *ppl)
 {
-	char	res;
 	int		vx;
 
 	vx = 0;
@@ -138,39 +135,36 @@ int		ft_get_mapXY(char *l, t_pos *mapsize, t_pos *ppl)
 	return (0);
 }
 
-int 	get_infos(t_meta *meta, int fd, int *map_offset, t_pos *ms, t_pos *ppl)
+int			get_infos(t_intel *it)
 {
 	char *l = NULL;
 	int err;
 	int gnl;
-	t_meta map;
 
 	err = 0;
-	while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
+	while (err >= 0 && (gnl = get_next_line(it->fd, &l)) > 0)
 	{
-		if ((err = reddit(meta, l, map_offset)) == MAP_FOUND)
+		if ((err = reddit(it, l)) == MAP_FOUND)
 			break ;
 		free(l);
 	}
 	if (err == MAP_FOUND)
 	{
-		ms->y++;
-		err = ft_get_mapXY(l, ms, ppl);
+		(it->map_size->y) = (it->map_size->y) + 1;
+		err = ft_get_mapXY(l, it->map_size, it->ppl);
 		free(l);
-		while (err >= 0 && (gnl = get_next_line(fd, &l)) > 0)
+		while (err >= 0 && (gnl = get_next_line(it->fd, &l)) > 0)
 		{
-			err = ft_get_mapXY(l, ms, ppl);
+			err = ft_get_mapXY(l, it->map_size, it->ppl);
 			free(l);
 		}
 		if (gnl == GNL_EOF)
 			free(l);
-		if (ppl->x == -1)
+		if (it->ppl->x == -1)
 		{
 			err = ERROR_NO_SPAWN;
 			print("Error\nNo spawn in .cub file\n");
 		}
-	 	printf("mapsize : (%d, %d)\n", ms->x, ms->y);
-	 	printf("ppl->x = %d : ppl->y = %d : ppl->o = %c\n", ppl->x, ppl->y, ppl->o);
 	}
 	return (err);
 }

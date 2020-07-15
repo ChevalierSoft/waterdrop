@@ -54,6 +54,7 @@ void	remove_2d_array(int **map, int my)
 		free(map[j++]);
 	}
 	free(map);
+	map = NULL;
 }
 
 int		**dup_array(int **map, int mx, int my)

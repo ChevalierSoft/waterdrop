@@ -51,41 +51,47 @@ typedef struct	s_meta
 
 typedef struct	s_intel
 {
+	int		**map;
 	char	*filename;	// rm
-	t_meta	meta;		//	--> g->textures
-	t_pos	ppl;		//	--> g->player->px/py
-	t_pos	maps_size;	//	--> g->map->sx/sy
+	t_meta	*meta;		//	--> g->textures
+	t_pos	*ppl;		//	--> g->player->px/py
+	t_pos	*map_size;	//	--> g->map->sx/sy
 	int		map_offset;	// rm
 	int		fd;			// rm
-
 }				t_intel;
 
 // debug.c
 void			help();
+void			alert(void);
 void			printr(char *s);
 void			print(char *s);
 int				ft_aff_file(char *name);
+void			aff_meta(t_meta *meta);
 
-// gnl
-int				get_next_line(int fd, char **line);
+// quit.c
+void			flush_quit(char *msg, t_intel **it, int code);
 
 // get_infos.c
-int				get_infos(t_meta *m, int f, int *s, t_pos *ms, t_pos *pl);
+int				get_infos(t_intel *it);
 
 // array_tools.c
 int				**init_2d_array(int mx, int my);
 void			remove_2d_array(int **map, int my);
 int				**dup_array(int **map, int mx, int my);
 
-//meta.c
-void			aff_meta(t_meta *meta);
+// meta.c
 t_meta			*meta_init(void);
 void			remove_meta(t_meta **m);
 
-// verif_cub.c
-void			ft_aff_map(int **map, t_pos mapsize, t_pos *ppl);
+// intel.c
+t_intel			*create_intel(void);
+void			remove_intel(t_intel **it);
+
+// main.c
+void			flush_quit(char *msg, t_intel **it, int code);
 
 // waterdrop.c
-int				waterdrop(int **map, t_pos mapsize, t_pos *ppl);
+void			ft_aff_map(int **map, t_pos *mapsize, t_pos *ppl);
+int				waterdrop(int **map, t_pos *mapsize, t_pos *ppl);
 
 #endif

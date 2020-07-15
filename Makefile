@@ -1,5 +1,5 @@
 NAME	= waterdrop #🌊
-FLAGS	= #-Wall -Wextra -Werror
+FLAGS	= -Wall -Wextra -Werror
 GRN     = \033[32;01m
 CYN		= \x1B[36;01m
 RST     = \033[0m
@@ -10,7 +10,9 @@ SRCS	= ./waterdrop.c \
 ./array_tools.c \
 ./meta.c \
 ./debug.c \
-./get_infos.c
+./get_infos.c \
+./intel.c \
+./quit.c
 
 all: $(NAME)
 

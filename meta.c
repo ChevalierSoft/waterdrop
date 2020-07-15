@@ -12,19 +12,6 @@
 
 #include "waterdrop.h"
 
-void	aff_meta(t_meta *meta)
-{
-	printf("sR : %s\n", meta->str_r);
-	printf("R  : ww : %d : wh  : %d\n", meta->ww, meta->wh);
-	printf("NO : %s\n", meta->path_n);
-	printf("SO : %s\n", meta->path_s);
-	printf("EA : %s\n", meta->path_e);
-	printf("WE : %s\n", meta->path_w);
-	printf("SP : %s\n", meta->path_sp);
-	printf("F  : %s\n", meta->path_f);
-	printf("C  : %s\n", meta->path_c);
-}
-
 t_meta	*meta_init(void)
 {
 	t_meta *meta;
@@ -67,6 +54,6 @@ void	remove_meta(t_meta **m)
 		free((*m)->path_f);
 	if ((*m)->path_c)
 		free((*m)->path_c);
-	if ((*m))
-		free(*m);
+	free(*m);
+	*m = NULL;
 }

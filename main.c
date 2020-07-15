@@ -1,21 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dait-atm <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/14 22:26:37 by dait-atm          #+#    #+#             */
+/*   Updated: 2020/07/14 22:26:48 by dait-atm         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "waterdrop.h"
 
-void	flush_quit(char *msg, char *name, int code)
-{
-	print(msg);
-	if (name)
-		free(name);
-	exit(code);
-}
-
-void	ft_init_pos(t_pos *p, int nx, int ny, char no)
-{
-	p->x = nx;
-	p->y = ny;
-	p->o = no;
-}
-
-int		**ft_get_map(int fd, t_pos mapsize)
+static int	**ft_get_map(int fd, t_pos *mapsize)
 {
 	int		i;
 	int		j;
@@ -24,7 +21,7 @@ int		**ft_get_map(int fd, t_pos mapsize)
 
 	i = 0;
 	j = 0;
-	map = init_2d_array(mapsize.x, mapsize.y);
+	map = init_2d_array(mapsize->x, mapsize->y);
 	while (read(fd, buf, 1) > 0)
 	{
 		if (*buf == '1' || *buf == '2' || *buf == '0')
@@ -33,77 +30,56 @@ int		**ft_get_map(int fd, t_pos mapsize)
 			map[j][i++] = ' ';
 		else if (*buf == 'N' || *buf == 'E' || *buf == 'S' || *buf == 'W')
 			map[j][i++] = 0;
-		else if (i == mapsize.x || (*buf == '\n'))
+		else if (i == mapsize->x || (*buf == '\n'))
 		{
 			j++;
 			i = 0;
 		}
 	}
-	printf("\n");
 	close(fd);
 	return (map);
 }
 
-int		main(int argc, char** argv)
+static int	game_redirection(t_intel **it, int wp)
 {
-	printf(CYN "\n. o O 🌊 WATERDROP 🌊 O o .\n\n" RST);
+	if (wp < 0)
+		print(RED "water leaks in the map\n" RST);
+	else
+		print(CYN "the map looks ledgit\n" RST);
+	remove_intel(it);
+	return (wp);
+}
 
-	int fd;
-	char *name;
-	int **map;
-	t_pos mapsize;
-	t_pos ppl;
-	int map_offset;
-	t_meta *meta;
-	
+static void	ft_apply_map_offset(t_intel *it)
+{
+	char buf[it->map_offset];
+
+	read(it->fd, buf, it->map_offset);
+}
+
+int			main(int argc, char** argv)
+{
+	t_intel *it;
+
+	print(CYN "\n. o O 🌊 WATERDROP 🌊 O o .\n\n" RST);
+	it = create_intel();
 	if (argc < 2)
-		name = strdup("maps/info.cub");
+		it->filename = strdup("maps/info.cub");
 	else
-		name = strdup(argv[1]);
-
-	ft_init_pos(&mapsize, 0, 0, 'x');
-	ft_init_pos(&ppl, -1, -1, 'p');
-
-	if ((fd = open(name, O_RDONLY)) < 0)
+		it->filename = strdup(argv[1]);
+	if ((it->fd = open(it->filename, O_RDONLY)) < 0)
+		flush_quit("Error\nWrong .cub file path\n", &it, -1);
+	if (get_infos(it) < 0)
 	{
-		flush_quit("Error\nWrong .cub file path\n", name, -1);
+		close(it->fd);
+		flush_quit("", &it, -3);
 	}
-
-	if (!(meta = meta_init()))
-	{
-		flush_quit("", name, -2);
-	}
-
-	map_offset = 0;
-	if (get_infos(meta, fd, &map_offset, &mapsize, &ppl) < 0)
-	{
-		close(fd);
-		flush_quit("", name, -3);
-	}
-	close(fd);
-
-	// maintenant on a l'intel
-
-	if ((fd = open(name, O_RDONLY)) < 0)
-	{
-		write(1, "Error\nWrong .cub file path\n", 27);
-		remove_meta(&meta);
-		free(name);
-		return (-4);
-	}
-	free(name);
-	name = NULL;
-
-	char pute[map_offset];
-	read(fd, pute, map_offset);
-
-	map = ft_get_map(fd, mapsize);
-	ft_aff_map(map, mapsize, &ppl);
-	if (waterdrop(map, mapsize, &ppl) < 0)
-		printf(RED "water leaks in the map\n" RST);
-	else
-		printf(CYN "the map looks ledgit\n" RST);
-	remove_2d_array(map, mapsize.y);
-	remove_meta(&meta);
+	close(it->fd);
+	if ((it->fd = open(it->filename, O_RDONLY)) < 0)
+		flush_quit("Error\nWrong .cub file path\n", &it, -4);
+	ft_apply_map_offset(it);
+	it->map = ft_get_map(it->fd, it->map_size);
+	ft_aff_map(it->map, it->map_size, it->ppl);
+	game_redirection(&it, waterdrop(it->map, it->map_size, it->ppl));
 	return (0);
 }
