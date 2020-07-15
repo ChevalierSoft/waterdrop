@@ -57,7 +57,7 @@ static void	ft_apply_map_offset(t_intel *it)
 	read(it->fd, buf, it->map_offset);
 }
 
-int			main(int argc, char** argv)
+int			main(int argc, char **argv)
 {
 	t_intel *it;
 
