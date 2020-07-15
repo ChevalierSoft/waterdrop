@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "waterdrop.h"
+
 /*
 ** in set_r()
 ** need to test meta->ww and meta->wh < mlx_get_screen_size
