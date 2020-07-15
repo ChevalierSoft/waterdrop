@@ -14,8 +14,8 @@
 
 static int	dup4meta(char **s, char *l, int *map_offset, int d)
 {
-	(*map_offset) += ft_strlen(l) + d + 1;
-	if (!((*s) = ft_strdup(l)))
+	(*map_offset) += ft_strlen(l) + 1;
+	if (!((*s) = ft_strdup(l + d)))
 	{
 		print("Error\nNot enough RAM for t_meta strings\n");
 		return (-1);
@@ -47,15 +47,15 @@ int			r_part3(t_intel *it, char *l)
 int			r_part2(t_intel *it, char *l, int *err)
 {
 	if (!ft_strncmp(l, "EA ", 3))
-		*err = dup4meta(&it->meta->path_e, l + 3, &it->map_offset, 3);
+		*err = dup4meta(&it->meta->path_e, l, &it->map_offset, 3);
 	else if (!ft_strncmp(l, "WE ", 3))
-		*err = dup4meta(&it->meta->path_w, l + 3, &it->map_offset, 3);
+		*err = dup4meta(&it->meta->path_w, l, &it->map_offset, 3);
 	else if (!ft_strncmp(l, "S ", 2))
-		*err = dup4meta(&it->meta->path_sp, l + 2, &it->map_offset, 2);
+		*err = dup4meta(&it->meta->path_sp, l, &it->map_offset, 2);
 	else if (!ft_strncmp(l, "F ", 2))
-		*err = dup4meta(&it->meta->path_f, l + 2, &it->map_offset, 2);
+		*err = dup4meta(&it->meta->path_f, l, &it->map_offset, 2);
 	else if (!ft_strncmp(l, "C ", 2))
-		*err = dup4meta(&it->meta->path_c, l + 2, &it->map_offset, 2);
+		*err = dup4meta(&it->meta->path_c, l, &it->map_offset, 2);
 	else
 		*err = r_part3(it, l);
 	return (*err);
@@ -75,14 +75,14 @@ int			r_part1(t_intel *it, char *l)
 		it->map_offset++;
 	else if (!ft_strncmp(l, "R ", 2))
 	{
-		err = dup4meta(&it->meta->str_r, l + 2, &it->map_offset, 2);
+		err = dup4meta(&it->meta->str_r, l, &it->map_offset, 2);
 		if ((err = set_r(it->meta)) < 0)
 			return (err);
 	}
 	else if (!ft_strncmp(l, "NO ", 3))
-		err = dup4meta(&it->meta->path_n, l + 3, &it->map_offset, 3);
+		err = dup4meta(&it->meta->path_n, l, &it->map_offset, 3);
 	else if (!ft_strncmp(l, "SO ", 3))
-		err = dup4meta(&it->meta->path_s, l + 3, &it->map_offset, 3);
+		err = dup4meta(&it->meta->path_s, l, &it->map_offset, 3);
 	else
 		err = r_part2(it, l, &err);
 	return (err);
