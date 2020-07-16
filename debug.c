@@ -62,3 +62,40 @@ void	aff_meta(t_meta *meta)
 	printf("F  : %s\n", meta->path_f);
 	printf("C  : %s\n", meta->path_c);
 }
+
+void		ft_aff_map(int **map, t_pos *mapsize, t_pos *ppl)
+{
+	int i;
+	int j;
+
+	j = 0;
+	while (j < mapsize->y)
+	{
+		i = 0;
+		while (i < mapsize->x)
+		{
+			if (i == ppl->x && j == ppl->y)
+			{
+				printf(YEL "%c " RST, ppl->o);
+				i++;
+			}
+			else
+			{
+				if (map[j][i] == 0)
+					printf(BLK "%d " RST, map[j][i++]);
+				else if (map[j][i] == 1)
+					printf(MAG "%d " RST, map[j][i++]);
+				else if (map[j][i] == 'x')
+					printf(CYN "%c " RST, map[j][i++]);
+				else if (map[j][i] == '+')
+					printf(GRN "%c " RST, map[j][i++]);
+				else if (map[j][i] == ' ')
+					printf(WHT "%c " RST, map[j][i++]);
+				else
+					printf(YEL "%d " RST, map[j][i++]);
+			}
+		}
+		printf("\n");
+		j++;
+	}
+}

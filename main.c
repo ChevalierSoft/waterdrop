@@ -40,21 +40,24 @@ static int	**ft_get_map(int fd, t_pos *mapsize)
 	return (map);
 }
 
-static int	game_redirection(t_intel **it, int wp)
-{
-	if (wp < 0)
-		print(RED "water leaks in the map\n" RST);
-	else
-		print(CYN "the map looks ledgit\n" RST);
-	remove_intel(it);
-	return (wp);
-}
-
 static void	ft_apply_map_offset(t_intel *it)
 {
 	char buf[it->map_offset];
 
 	read(it->fd, buf, it->map_offset);
+}
+
+static int	game_redirection(t_intel **it, int wp)
+{
+	if (wp < 0)
+	{
+		if (wp >= -2)
+			print(RED "water leaks in the map\n" RST);
+	}
+	else
+		print(CYN "the map looks ledgit\n" RST);
+	remove_intel(it);
+	return (wp);
 }
 
 int			main(int argc, char **argv)

@@ -22,7 +22,7 @@ int			set_r(t_meta *meta)
 	int i;
 
 	i = 0;
-	if ((meta->ww = ft_atoi(meta->str_r)) <= 3)
+	if ((meta->ww = ft_atoi(meta->str_r)) <= 0)
 	{
 		print("Error\nWrong width resolution in .cub file\n");
 		return (-1);
@@ -30,7 +30,7 @@ int			set_r(t_meta *meta)
 	while (meta->str_r[i] != ' ')
 		i++;
 	i++;
-	if ((meta->wh = atoi(meta->str_r + i)) <= 3)
+	if ((meta->wh = atoi(meta->str_r + i)) <= 0)
 	{
 		print("Error\nWrong height resolution in .cub file\n");
 		return (-2);

@@ -76,6 +76,7 @@ void			printr(char *s);
 void			print(char *s);
 int				ft_aff_file(char *name);
 void			aff_meta(t_meta *meta);
+void			ft_aff_map(int **map, t_pos *mapsize, t_pos *ppl);
 
 // quit.c
 void			flush_quit(char *msg, t_intel **it, int code);
@@ -89,7 +90,7 @@ int				get_infos(t_intel *it);
 
 // array_tools.c
 int				**init_2d_array(int mx, int my);
-void			remove_2d_array(int **map, int my);
+void			remove_2d_array(int ***map, int my);
 int				**dup_array(int **map, int mx, int my);
 
 // meta.c
@@ -104,7 +105,6 @@ void			remove_intel(t_intel **it);
 void			flush_quit(char *msg, t_intel **it, int code);
 
 // waterdrop.c
-void			ft_aff_map(int **map, t_pos *mapsize, t_pos *ppl);
 int				waterdrop(int **map, t_pos *mapsize, t_pos *ppl);
 
 #endif

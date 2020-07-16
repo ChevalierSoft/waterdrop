@@ -17,7 +17,7 @@ void	remove_intel(t_intel **it)
 	if (!*it)
 		return ;
 	if ((*it)->map)
-		remove_2d_array((*it)->map, (*it)->map_size->y);
+		remove_2d_array(&(*it)->map, (*it)->map_size->y);
 	if ((*it)->filename)
 		free((*it)->filename);
 	if ((*it)->meta)

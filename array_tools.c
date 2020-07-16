@@ -44,17 +44,19 @@ int		**init_2d_array(int mx, int my)
 	return (map);
 }
 
-void	remove_2d_array(int **map, int my)
+void	remove_2d_array(int ***map, int my)
 {
 	int j;
 
+	if (!(*map))
+		return ;
 	j = 0;
 	while (j < my)
 	{
-		free(map[j++]);
+		free((*map)[j++]);
 	}
-	free(map);
-	map = NULL;
+	free(*map);
+	(*map) = NULL;
 }
 
 int		**dup_array(int **map, int mx, int my)
@@ -63,7 +65,10 @@ int		**dup_array(int **map, int mx, int my)
 	int j;
 	int **w;
 
-	w = init_2d_array(mx, my);
+	if (!map)
+		return (NULL);
+	if (!(w = init_2d_array(mx, my)))
+		return (NULL);
 	j = 0;
 	while (j < my)
 	{
